@@ -21,6 +21,7 @@ export default class Two extends React.Component<Props,any>{
         const data = new FormData();
         data.append('fileName',this.fileInput.current.files[0].name);
         data.append('file',this.fileInput.current.files[0]);
+        console.log(this.fileInput.current.files[0].size);
         axios({
             method: 'post',
             timeout: 2000,
@@ -31,6 +32,7 @@ export default class Two extends React.Component<Props,any>{
                 console.log(percent);
             }
         }).then(response => {
+            console.log(response.status)
             console.log(response.data);
         }).catch(error => {
             console.log(error);
