@@ -31,7 +31,7 @@ export default class FileUploader extends React.Component<Props,States>{
     }
     preUpload(){
         let InputFile = this.fileInput.current.files[0];
-        let blobSlice = File.prototype.slice;
+        let blobSlice = File.prototype.slice; //这里有一个浏览器兼容性的问题
         let chunkSize = 1024*1024*5;
         let chunks = Math.ceil(InputFile.size/chunkSize);
         let currentChunk = 0;
