@@ -6,9 +6,7 @@ interface Props{
 
 }
 interface States{
-    uploadedFile: boolean,
-    existFile: boolean,
-    uploadedChunk: boolean 
+
 }
 interface Params{
     chunks:{
@@ -66,7 +64,7 @@ export default class Upload extends React.Component<Props,States>{
         let sparkTotal = new SparkMD5();
         // let sparkChunk = new SparkMD5.ArrayBuffer();
         let currentChunk = 0;
-        let chunkSize = 1024*1024*10; //1kB
+        let chunkSize = 1024*1024; //100kB
         let preloadedJSON:preloadedFormat = {
             file:{
                 fileMd5: '',
@@ -90,15 +88,6 @@ export default class Upload extends React.Component<Props,States>{
         totalFileReader.onload = function(e:any){
             sparkTotal.append(e.target.result);
             preloadedJSON.file.fileMd5 = sparkTotal.end();
-            axios({
-                method: 'post',
-                url: 'http://222.20.79.250:8081',
-                data: preloadedJSON.file.fileMd5
-            }).then(response => {
-                console.log(response)
-            }).catch(error =>{
-                console.log(error)
-            });
             // console.log(preloadedJSON.file.fileMd5);
         };
         chunkFileReader.onload = function(e:any){
@@ -110,9 +99,6 @@ export default class Upload extends React.Component<Props,States>{
             // console.log(e.target.result);
             // console.log(sparkChunk.end());
             preloadedJSON.chunk.chunkMd5 = sparkChunk.end();
-            axios({
-                method: 'post',
-            })
             // console.log(preloadedJSON.chunk.chunkMd5);
             preloadedJSON.chunk.chunkFile.body = [];
             // console.log(preloadedJSON.chunk.chunkFile.body);
@@ -187,12 +173,13 @@ export default class Upload extends React.Component<Props,States>{
             }
             chunkFile.emptyFileChunk = firstChunkMd5;
             console.log(chunkFile);
+            let params:string;
             axios({
                 method: 'post',
-                url: 'http://222.20.79.250:8081',
+                url: `http://222.20.79.250:8081/upload_file_part?fileMd5=${chunkFile.emptyFileChunk}&chunkMd5=${chunkFile.chunkMd5}`,
                 data: chunkFile
             }).then(response => {
-                console.log(response.data);
+                console.log(response);
             }).catch(error => {
                 console.log(error);
             })
