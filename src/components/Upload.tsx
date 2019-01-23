@@ -27,7 +27,8 @@ interface preloadedFormat{
     file:{
         fileMd5:string,
         chunksNumber: number,
-        chunkSize: number
+        chunkSize: number,
+        fileMd5Status:boolean
     },
     chunk:{
         chunkNumber: number,
@@ -94,7 +95,8 @@ export default class Upload extends React.Component<Props,States>{
             file:{
                 fileMd5: '',
                 chunksNumber : Math.ceil(InputFile.size / chunkSize),
-                chunkSize: chunkSize
+                chunkSize: chunkSize,
+                fileMd5Status:false
             },
             chunk:{
                 chunkNumber: 0,
@@ -114,11 +116,12 @@ export default class Upload extends React.Component<Props,States>{
             chunkSize: 0,
             chunk:[]
         };
-        let firstChunkMd5:string;
+        // let firstChunkMd5:string;
         totalFileReader.readAsArrayBuffer(InputFile);
         totalFileReader.onload = function(e:any){
             sparkTotal.append(e.target.result);
             preloadedJSON.file.fileMd5 = sparkTotal.end();
+            preloadedJSON.file.fileMd5Status = true;
             // console.log(preloadedJSON.file.fileMd5);
         };
         chunkFileReader.onload = function(e:any){
@@ -205,11 +208,11 @@ export default class Upload extends React.Component<Props,States>{
             // console.log(chunkChunk);
             Object.assign(chunkFile,chunkChunk);
             if(currentChunk === 0){
-                firstChunkMd5 = chunkChunk.chunkMd5;
+                // firstChunkMd5 = chunkChunk.chunkMd5;
                 httpConNumber++;
                 axios({
                     method: 'post',
-                    url: `http://222.20.79.250:8081/api/pullChunkList?firstChunkMd5=${firstChunkMd5}`
+                    url: `http://222.20.79.250:8081/api/pullChunkList?fileMd=${preloadedJSON.file.fileMd5}`
                 }).then(response => {
                     httpConNumber--;
                     console.log(response);
@@ -223,7 +226,7 @@ export default class Upload extends React.Component<Props,States>{
             while(!uploadChunkList.getListStatus){
                 console.log('waiting for the list because i do not have a better way');
             }
-            chunkFile.emptyFileChunk = firstChunkMd5;
+            // chunkFile.emptyFileChunk = firstChunkMd5;
             console.log(chunkFile);
             switch(uploadChunkList.fileStatus){
                 case 'posted':
@@ -295,6 +298,9 @@ export default class Upload extends React.Component<Props,States>{
             // console.log(chunkEnd);
             // console.log(InputFile.size);
             chunkFileReader.readAsText(blobSlice.call(InputFile,chunkStart,chunkEnd));
+        }
+        while(!preloadedJSON.file.fileMd5Status){
+            console.log('waiting for the whole fileMd5');
         }
         loadChunks();
     }
