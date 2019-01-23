@@ -82,7 +82,8 @@ export default class Upload extends React.Component<Props,States>{
         let sparkTotal = new SparkMD5();
         // let sparkChunk = new SparkMD5.ArrayBuffer();
         let currentChunk = 0;
-        let chunkSize = 1024*1024*10; //100kB
+        let httpConNumber = 0;
+        let chunkSize = (InputFile.size > 10*1024*1024) ? 10*1024*1024 :1024*1024;
         let uploadChunkList:uploadChunkList =  {
             getListStatus:false,
             fileStatus: '',
@@ -205,14 +206,17 @@ export default class Upload extends React.Component<Props,States>{
             Object.assign(chunkFile,chunkChunk);
             if(currentChunk === 0){
                 firstChunkMd5 = chunkChunk.chunkMd5;
+                httpConNumber++;
                 axios({
                     method: 'post',
                     url: `http://222.20.79.250:8081/api/pullChunkList?firstChunkMd5=${firstChunkMd5}`
                 }).then(response => {
+                    httpConNumber--;
                     console.log(response);
                     uploadChunkList.getListStatus = true;
                     //some other list information
                 }).catch(error => {
+                    httpConNumber--;
                     console.log(error)
                 })
             }
@@ -227,6 +231,7 @@ export default class Upload extends React.Component<Props,States>{
                 case 'posting':
                   for(var i =0 ;i<uploadChunkList.uploadedChunk.length;i++){
                       if(chunkFile.chunkMd5 != uploadChunkList.uploadedChunk[i].chunkMd5){
+                        httpConNumber++;
                         axios({
                             method: 'post',
                             // url: `http://222.20.79.250:8081/api/upload_file_part?emptyFileMd5=${chunkFile.emptyFileChunk}&chunkMd5=${chunkFile.chunkMd5}&fileMd5=${preloadedJSON.file.fileMd5}`,
@@ -234,8 +239,10 @@ export default class Upload extends React.Component<Props,States>{
                             data: chunkFile
                            //data: 'jackchu'
                         }).then(response => {
+                            httpConNumber--;
                             console.log(response);
                         }).catch(error => {
+                            httpConNumber--;
                             console.log(error);
                         })
                       }else{
@@ -244,6 +251,7 @@ export default class Upload extends React.Component<Props,States>{
                   }
                   break;
                 case 'notposted':
+                  httpConNumber++;
                   axios({
                       method: 'post',
                       // url: `http://222.20.79.250:8081/api/upload_file_part?emptyFileMd5=${chunkFile.emptyFileChunk}&chunkMd5=${chunkFile.chunkMd5}&fileMd5=${preloadedJSON.file.fileMd5}`,
@@ -251,11 +259,16 @@ export default class Upload extends React.Component<Props,States>{
                       data: chunkFile
                   //data: 'jackchu'
                   }).then(response => {
+                      httpConNumber--;
                       console.log(response);
                   }).catch(error => {
+                      httpConNumber--;
                       console.log(error);
                   })
                   break;
+            }
+            while(httpConNumber >= 6){
+                console.log('max http connection is set to 6 , now waiting for a connection finished');
             }
             currentChunk++;
             if(currentChunk < preloadedJSON.file.chunksNumber){
