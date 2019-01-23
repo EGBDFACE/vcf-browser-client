@@ -50,6 +50,24 @@ interface preloadedFormat{
         }
     }
 }
+interface checkoutInfo{
+    fileMd5: string,
+    chunksNumber: number,
+    chunkSize: number,
+    chunk:{
+        chunkMd5:string,
+        chunkNumber: number
+    }[]
+}
+interface uploadChunkList{
+    getListStatus:boolean,
+    fileStatus:string,
+    // emptyFileMd5:string,
+    // fileMd5:string,
+    uploadedChunk:{
+        chunkMd5:string
+    }[]
+}
 export default class Upload extends React.Component<Props,States>{
     private fileInput: React.RefObject<HTMLInputElement>;
     constructor(props:Props){
@@ -64,7 +82,13 @@ export default class Upload extends React.Component<Props,States>{
         let sparkTotal = new SparkMD5();
         // let sparkChunk = new SparkMD5.ArrayBuffer();
         let currentChunk = 0;
-        let chunkSize = 1024*1024; //100kB
+        let chunkSize = 1024*1024*10; //100kB
+        let uploadChunkList:uploadChunkList =  {
+            getListStatus:false,
+            fileStatus: '',
+            // emptyFileMd5:
+            uploadedChunk:[]
+        }
         let preloadedJSON:preloadedFormat = {
             file:{
                 fileMd5: '',
@@ -82,6 +106,12 @@ export default class Upload extends React.Component<Props,States>{
                     endLine: ''
                 }
             }
+        };
+        let checkoutInfo:checkoutInfo = {
+            fileMd5:'',
+            chunksNumber: 0,
+            chunkSize: 0,
+            chunk:[]
         };
         let firstChunkMd5:string;
         totalFileReader.readAsArrayBuffer(InputFile);
@@ -166,26 +196,83 @@ export default class Upload extends React.Component<Props,States>{
             // console.log(chunkFile);
             // console.log(preloadedJSON.file);
             let chunkChunk = JSON.parse(JSON.stringify(preloadedJSON.chunk));
+            let chunkCheckobj ={
+                chunkNumber: preloadedJSON.chunk.chunkNumber,
+                chunkMd5: preloadedJSON.chunk.chunkMd5
+            };
+            checkoutInfo.chunk.push(chunkCheckobj);
             // console.log(chunkChunk);
             Object.assign(chunkFile,chunkChunk);
             if(currentChunk === 0){
                 firstChunkMd5 = chunkChunk.chunkMd5;
+                axios({
+                    method: 'post',
+                    url: `http://222.20.79.250:8081/api/pullChunkList?firstChunkMd5=${firstChunkMd5}`
+                }).then(response => {
+                    console.log(response);
+                    uploadChunkList.getListStatus = true;
+                    //some other list information
+                }).catch(error => {
+                    console.log(error)
+                })
+            }
+            while(!uploadChunkList.getListStatus){
+                console.log('waiting for the list because i do not have a better way');
             }
             chunkFile.emptyFileChunk = firstChunkMd5;
             console.log(chunkFile);
-            let params:string;
-            axios({
-                method: 'post',
-                url: `http://222.20.79.250:8081/upload_file_part?fileMd5=${chunkFile.emptyFileChunk}&chunkMd5=${chunkFile.chunkMd5}`,
-                data: chunkFile
-            }).then(response => {
-                console.log(response);
-            }).catch(error => {
-                console.log(error);
-            })
+            switch(uploadChunkList.fileStatus){
+                case 'posted':
+                  break;
+                case 'posting':
+                  for(var i =0 ;i<uploadChunkList.uploadedChunk.length;i++){
+                      if(chunkFile.chunkMd5 != uploadChunkList.uploadedChunk[i].chunkMd5){
+                        axios({
+                            method: 'post',
+                            // url: `http://222.20.79.250:8081/api/upload_file_part?emptyFileMd5=${chunkFile.emptyFileChunk}&chunkMd5=${chunkFile.chunkMd5}&fileMd5=${preloadedJSON.file.fileMd5}`,
+                            url:`http://222.20.79.250:8081/api/upload_file_part?chunkMd5=${chunkFile.chunkMd5}`,
+                            data: chunkFile
+                           //data: 'jackchu'
+                        }).then(response => {
+                            console.log(response);
+                        }).catch(error => {
+                            console.log(error);
+                        })
+                      }else{
+                          console.log(`chunkMd5=${chunkFile.chunkMd5}have uploaded`);
+                      }
+                  }
+                  break;
+                case 'notposted':
+                  axios({
+                      method: 'post',
+                      // url: `http://222.20.79.250:8081/api/upload_file_part?emptyFileMd5=${chunkFile.emptyFileChunk}&chunkMd5=${chunkFile.chunkMd5}&fileMd5=${preloadedJSON.file.fileMd5}`,
+                      url:`http://222.20.79.250:8081/api/upload_file_part?chunkMd5=${chunkFile.chunkMd5}`,
+                      data: chunkFile
+                  //data: 'jackchu'
+                  }).then(response => {
+                      console.log(response);
+                  }).catch(error => {
+                      console.log(error);
+                  })
+                  break;
+            }
             currentChunk++;
             if(currentChunk < preloadedJSON.file.chunksNumber){
                 loadChunks(); 
+            }else{
+                checkoutInfo.fileMd5 = preloadedJSON.file.fileMd5;
+                checkoutInfo.chunksNumber = preloadedJSON.file.chunksNumber;
+                checkoutInfo.chunkSize = preloadedJSON.file.chunkSize;
+                axios({
+                    method:'post',
+                    url:`http://222.20.79.250:8081/api/checkoutInfo`,
+                    data: checkoutInfo
+                }).then(response => {
+                    console.log(response);
+                }).catch(error => {
+                    console.log(error);
+                })
             }
         }
         function loadChunks(){
