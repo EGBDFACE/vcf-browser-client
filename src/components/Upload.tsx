@@ -150,9 +150,9 @@ export default class Upload extends React.Component<Props,States>{
                 //（我这里采用的就是#CHROM字段是按照#CHROM POS ID REF ALT QUAL FILTER INF顺序的）
                 // 在后台可以进行校验判断是否是正确类型
                 if(i === 0){
-                    preloadedJSON.chunk.chunkFile.startLine = v;
+                    preloadedJSON.chunk.chunkFile.startLine = v;//这里将换行符去掉了（就是说当分片很不幸分的正好的时候后台难以区分和恢复
                 }else if(i === ChunkStringArray.length-1){
-                    preloadedJSON.chunk.chunkFile.endLine = v;
+                    preloadedJSON.chunk.chunkFile.endLine = v;//只好在服务端做一个简单的文件分析判别
                 }else{
                     if(v.indexOf('#') === -1){
                         let tmp = v.split('\t');
@@ -161,37 +161,48 @@ export default class Upload extends React.Component<Props,States>{
                             POS: tmp[1],
                             ID: tmp[2],
                             REF: tmp[3],
-                            ALT: tmp[4],
+                            ALT: '.',
                             QUAL: '.',
                             FILTER: '.',
                             INFO: '.'
                         };
-                        let indexINS = tmp[4].indexOf('INS');
-                        let indexDEL = tmp[4].indexOf('DEL');
-                        let indexDUP = tmp[4].indexOf('DNP');
-                        let indexTDUP = tmp[4].indexOf('TDUP');
-                        let indexEND = tmp[4].indexOf('END');
-                        if(indexINS+indexDEL+indexDUP+indexTDUP === -4){}
+                        let indexINS = tmp[4].indexOf('<INS>');
+                        let indexDEL = tmp[4].indexOf('<DEL>');
+                        let indexDUP = tmp[4].indexOf('<DUP>');
+                        let indexTDUP = tmp[4].indexOf('<TDUP>');
+                        let indexEND = tmp[7].indexOf('END');
+                        if(indexINS+indexDEL+indexDUP+indexTDUP === -4){
+                            if(tmp[4].indexOf('<') == -1){
+                                obj.ALT = tmp[4];
+                            }else{
+                                obj.ALT = '.';
+                            }
+                        }
                         else{
+                            obj.ALT = tmp[4];
                             let k =0;
-                            while((tmp[4].charAt(indexEND+k) != ';')&&(k<= tmp[4].length)){
+                            while((tmp[7].charAt(indexEND+k) != ';')&&(k<= tmp[7].length)){
                                 k++;
                             }
                             if(indexINS != -1){
-                                obj.INFO = 'SVTYPE=INS;'+tmp[4].slice(indexEND,indexEND+k+1);
+                                obj.INFO = 'SVTYPE=INS;'+tmp[7].slice(indexEND,indexEND+k+1);
                             }else if(indexDEL != -1){
-                                obj.INFO = 'SVTYPE=DEL;'+tmp[4].slice(indexEND,indexEND+k+1);
+                                obj.INFO = 'SVTYPE=DEL;'+tmp[7].slice(indexEND,indexEND+k+1);
                             }else if(indexDUP != -1){
-                                obj.INFO = 'SYTYPE=DUP;'+tmp[4].slice(indexEND,indexEND+k+1);
+                                obj.INFO = 'SYTYPE=DUP;'+tmp[7].slice(indexEND,indexEND+k+1);
                             }else if(indexTDUP != -1){
-                                obj.INFO = 'SYTYPE=TDUP;'+tmp[4].slice(indexEND,indexEND+k+1);
+                                obj.INFO = 'SYTYPE=TDUP;'+tmp[7].slice(indexEND,indexEND+k+1);
                             }else{
                                 console.log('error,vep only support INS/DEL/DUP/TDUP structural variant');
                             }
                         }
                         preloadedJSON.chunk.chunkFile.body.push(obj);
                     }else if(v.indexOf('#CHROM') != -1){
-                        preloadedJSON.chunk.chunkFile.Chrom = v; //注意这里上传的是整个的表头
+                        // preloadedJSON.chunk.chunkFile.Chrom = v; //注意这里上传的是整个的表头
+                        preloadedJSON.chunk.chunkFile.Chrom = '#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO';
+                        if(v.indexOf('#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINF') == -1){
+                            console.log('only support #CHROM of #CHROM POS ID REF ALT QUAL FILTER INF')
+                        }
                     }else if(v.indexOf('##fileformat') != -1){
                         preloadedJSON.chunk.chunkFile.fileformat = v;
                     }else if(v.indexOf('##') != -1){}else{
