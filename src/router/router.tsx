@@ -9,6 +9,10 @@ const Two = Loadable({
     loader: () => import('../pages/TwoPage'),
     loading: () => <div>loading...</div>
 })
+// const Home = Loadable({
+//     loader: () => import('../pages/HomePage'),
+//     loading: () => <div>loading...</div>
+// })
 // import Hello from '../containers/Hello';
 import Home from '../pages/HomePage';
 // import Two from '../pages/TwoPage';

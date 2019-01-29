@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {Link} from 'react-router-dom';
-import FileUploader from '../components/FileUploader';
+// import FileUploader from '../components/FileUploader';
 import Upload from '../components/Upload';
 
 export default class Home extends React.Component<any,any>{
