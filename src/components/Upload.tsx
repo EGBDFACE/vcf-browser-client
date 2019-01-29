@@ -1,6 +1,8 @@
 import * as React from 'react';
-import SparkMD5 = require('spark-md5');
+// import SparkMD5 = require('spark-md5');
+import * as SparkMD5 from 'spark-md5';
 import axios from 'axios';
+// import * as axios from 'axios';
 
 interface Props{
 
@@ -166,6 +168,7 @@ export default class Upload extends React.Component<Props,States>{
                             FILTER: '.',
                             INFO: '.'
                         };
+                        // console.log(tmp)
                         let indexINS = tmp[4].indexOf('<INS>');
                         let indexDEL = tmp[4].indexOf('<DEL>');
                         let indexDUP = tmp[4].indexOf('<DUP>');

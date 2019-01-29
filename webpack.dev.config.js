@@ -19,7 +19,7 @@ const commonConfig = require('./webpack.common.config');
 // commonConfig.plugins.push(HtmlWebpackPluginConfig);
 // config.plugins.push(new HtmlWebpackPlugin());
 module.exports = merge(commonConfig,{
-    entry: './src/index.tsx',
+    //entry: './src/index.tsx',
     devServer:{
         hot: true,
         historyApiFallback: true

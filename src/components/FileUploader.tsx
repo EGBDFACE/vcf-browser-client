@@ -1,5 +1,6 @@
 import * as React from 'react';
-import SparkMD5 = require('spark-md5');
+// import SparkMD5 = require('spark-md5');
+import * as SparkMD5 from 'spark-md5';
 import axios from 'axios';
 
 interface Props{
