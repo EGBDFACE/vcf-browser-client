@@ -1,9 +1,28 @@
 import {createStore} from 'redux';
-import {StoreState} from '../types/storeInterface';
-import {enthusiasm} from '../reducers/reduceHello';
+// import {StoreState} from '../types/storeInterface';
+// import {enthusiasm} from '../reducers/reduce';
+import Reducer from '../reducers/reduce';
 
-const store = createStore<StoreState,any,any,any>(enthusiasm,{
+export interface StoreState{
+    languageName:string;
+    enthusiasmLevel: number;
+    uploaded: boolean;
+    uploading: boolean;
+}
+// const store = createStore<StoreState,any,any,any>(Reducer,{
+//     enthusiasmLevel: 1,
+//     languageName: 'TypeScript',
+//     uploaded: false,
+//     uploading: false
+// });
+
+const initialState:StoreState = {
     enthusiasmLevel: 1,
-    languageName: 'TypeScript'
-});
+    languageName: 'TypeScript',
+    uploaded: false,
+    uploading: false
+};
+
+let store = createStore(Reducer,initialState);
+// const store = createStore(enthusiasm);
 export default store;

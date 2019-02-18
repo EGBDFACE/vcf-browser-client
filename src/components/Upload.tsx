@@ -339,7 +339,7 @@ export default class Upload extends React.Component<Props,States>{
     render(){
         return(
             <div>
-                <input type= "file" name="file" ref={this.fileInput} onChange = {()=> this.upload()}></input>
+                <input type= "file" name="file" ref={this.fileInput}></input>
                 <button onClick={()=> this.upload()}>upload</button>
             </div>
         )

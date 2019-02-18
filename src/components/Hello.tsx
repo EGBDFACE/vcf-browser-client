@@ -15,6 +15,7 @@ class Hello extends React.Component<Props,object>{
     }
     render(){
         const {name, enthusiasmLevel =1, onIncrement,onDecrement} = this.props;
+        console.log(this.props)
         if(enthusiasmLevel <= 0){
             throw new Error('error from enthusiasm<0');
         }

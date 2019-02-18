@@ -1,5 +1,6 @@
 import * as React from 'react';
 import Loadable from 'react-loadable';
+import store from '../store/store';
 
 const Hello = Loadable({
     loader: ()=> import('../containers/Hello'),
