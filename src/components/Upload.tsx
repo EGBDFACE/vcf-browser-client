@@ -2,6 +2,7 @@ import * as React from 'react';
 // import SparkMD5 = require('spark-md5');
 import * as SparkMD5 from 'spark-md5';
 import axios from 'axios';
+import '../index.scss';
 // import * as axios from 'axios';
 
 interface Props{
@@ -338,9 +339,10 @@ export default class Upload extends React.Component<Props,States>{
     }
     render(){
         return(
-            <div>
-                <input type= "file" name="file" ref={this.fileInput}></input>
-                <button onClick={()=> this.upload()}>upload</button>
+            <div className='fileUpload'>
+                <input type= "file" id='file' name="file" ref={this.fileInput} className='fileInput'/>
+                <label htmlFor='file'>Choose a file</label>
+                <button onClick={()=> this.upload()} className='fileUploadBt fileUploadBt_disable'>UPLOAD</button>
             </div>
         )
     }

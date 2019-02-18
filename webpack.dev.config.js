@@ -24,6 +24,19 @@ module.exports = merge(commonConfig,{
         hot: true,
         historyApiFallback: true
     },
+    module:{
+        rules:[
+            {
+                test: /\.scss$/,
+                // include:[path.join(__dirname,'./../','src')],
+                use: [
+                    'style-loader',
+                    'css-loader',
+                    'sass-loader'
+                ]
+            }
+        ]
+    },
     plugins: [
         new webpack.HotModuleReplacementPlugin(),
         new HtmlWebpackPlugin({

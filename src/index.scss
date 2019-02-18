@@ -1,0 +1,75 @@
+
+$content-color: #4b0f31;
+$bg-color: #f1e5e6;
+$iFile-bg-color: #dfc8ca;
+$bt-bg-color: #d3394c;
+$bt-hover-color: #722040;
+
+body{
+    padding: 0;
+    margin: 0;
+    font-size:14px;
+    color: $content-color;
+    background-color: $bg-color;
+}
+
+.header{
+   padding: 2em 1em 4em;
+   text-align: center; 
+}
+
+.header h1{
+    font-size: 3em;
+    line-height: 1;
+}
+
+.fileUpload{
+    padding: 6.25em 1.25em;
+    max-width: 800px;
+    margin: 20px auto;
+    background-color: $iFile-bg-color;
+    border-radius: 4px;
+}
+
+@mixin fileUploadClassCommon{
+    font-size: 1.25em;
+    font-weight: 700;
+    border-radius: 5px;
+    display: inline-block;
+    padding: 0.625rem 1.25rem;
+}
+
+.fileInput{
+    width: 0.1px;
+    height: 0.1px;
+    position: absolute;
+    opacity: 0;
+}
+
+.fileInput + label{
+    @include fileUploadClassCommon;
+    background-color: $bt-bg-color;
+    color: $bg-color;
+    cursor: pointer;
+    &:hover{
+        background-color: $bt-hover-color;
+    }
+}
+
+.fileInput:focus + label{
+    outline: 1px dotted #000;
+    outline: -webkit-focus-ring-color auto 5px;
+    background-color: $bt-hover-color;
+}
+
+.fileUploadBt_disable{
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.fileUploadBt{
+    color: $bg-color;
+    background-color: $bt-bg-color;
+    outline: none;
+    @include fileUploadClassCommon;
+}
