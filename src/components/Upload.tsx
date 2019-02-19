@@ -6,7 +6,8 @@ import '../index.scss';
 // import * as axios from 'axios';
 
 interface Props{
-
+    selectedFileName: string;
+    fileSelect?: (name:string)=> void;
 }
 interface States{
 
@@ -337,11 +338,18 @@ export default class Upload extends React.Component<Props,States>{
             })
         }
     }
+    // fileSelect(name:any){
+    //     // console.log(this.fileInput.current.files[0]);
+    //     console.log(name);
+    // }
     render(){
+        const {selectedFileName, fileSelect} = this.props;
+        // console.log(this.props)
+        // console.log(selectedFileName)
         return(
             <div className='fileUpload'>
-                <input type= "file" id='file' name="file" ref={this.fileInput} className='fileInput'/>
-                <label htmlFor='file'>Choose a file</label>
+                <input type= "file" id='file' name="file" ref={this.fileInput} className='fileInput' onChange={()=>fileSelect(this.fileInput.current.files[0].name)}/>
+                <label htmlFor='file'>{selectedFileName}</label>
                 <button onClick={()=> this.upload()} className='fileUploadBt fileUploadBt_disable'>UPLOAD</button>
             </div>
         )

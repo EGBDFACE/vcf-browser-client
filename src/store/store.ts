@@ -8,6 +8,7 @@ export interface StoreState{
     enthusiasmLevel: number;
     uploaded: boolean;
     uploading: boolean;
+    selectedFileName: string;
 }
 // const store = createStore<StoreState,any,any,any>(Reducer,{
 //     enthusiasmLevel: 1,
@@ -20,7 +21,8 @@ const initialState:StoreState = {
     enthusiasmLevel: 1,
     languageName: 'TypeScript',
     uploaded: false,
-    uploading: false
+    uploading: false,
+    selectedFileName: 'Choose a file'
 };
 
 let store = createStore(Reducer,initialState);

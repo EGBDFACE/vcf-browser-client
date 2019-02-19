@@ -1,7 +1,8 @@
 import * as React from 'react';
 import {Link} from 'react-router-dom';
 // import FileUploader from '../components/FileUploader';
-import Upload from '../components/Upload';
+// import Upload from '../components/Upload';
+import Upload from '../containers/Upload';
 import '../index.scss';
 
 export default class Home extends React.Component<any,any>{
