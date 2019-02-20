@@ -3,12 +3,27 @@ import {createStore} from 'redux';
 // import {enthusiasm} from '../reducers/reduce';
 import Reducer from '../reducers/reduce';
 
+// export interface StoreState{
+//     languageName:string;
+//     enthusiasmLevel: number;
+//     uploaded: boolean;
+//     uploading: boolean;
+//     selectedFileName: string;
+//     fileFromServer: object;
+// }
+export interface enthusiasm{
+    languageName: string,
+    enthusiasmLevel: number
+}
+export interface fileUpload{
+    uploaded: boolean,
+    uploading: boolean,
+    selectedFileName: string,
+    fileFromServer: object
+}
 export interface StoreState{
-    languageName:string;
-    enthusiasmLevel: number;
-    uploaded: boolean;
-    uploading: boolean;
-    selectedFileName: string;
+    enthusiasm:enthusiasm,
+    fileUpload:fileUpload
 }
 // const store = createStore<StoreState,any,any,any>(Reducer,{
 //     enthusiasmLevel: 1,
@@ -17,12 +32,23 @@ export interface StoreState{
 //     uploading: false
 // });
 
-const initialState:StoreState = {
-    enthusiasmLevel: 1,
-    languageName: 'TypeScript',
-    uploaded: false,
-    uploading: false,
-    selectedFileName: 'Choose a file'
+export const initialState:StoreState = {
+    enthusiasm: {
+        languageName: 'TypeScript',
+        enthusiasmLevel: 1
+    },
+    fileUpload: {
+        uploaded: false,
+        uploading: false,
+        selectedFileName: 'Choose a file',
+        fileFromServer: null
+    }
+    // enthusiasmLevel: 1,
+    // languageName: 'TypeScript',
+    // uploaded: false,
+    // uploading: false,
+    // selectedFileName: 'Choose a file',
+    // fileFromServer: null
 };
 
 let store = createStore(Reducer,initialState);

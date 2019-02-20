@@ -4,15 +4,16 @@ import { StoreState } from '../store/store';
 import { connect } from 'react-redux';
 import { Dispatch } from 'react';
 
-function mapStateToProps({selectedFileName}:StoreState){
+function mapStateToProps(state:StoreState){
     return{
-        selectedFileName
+        selectedFileName:state.fileUpload.selectedFileName
     }
 }
 
 function mapDispatchToProps(dispatch:Dispatch<actions.UploadStatus>){
     return {
-        fileSelect: (name:string) => dispatch(actions.FileSlected(name))
+        fileSelect: (name:string) => dispatch(actions.FileSlected(name)),
+        fileUpload: (file:object) => dispatch(actions.FileUpload(file))
     }
 }
 
