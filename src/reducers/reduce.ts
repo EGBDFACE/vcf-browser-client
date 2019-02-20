@@ -59,20 +59,23 @@ function fileUpload(state:fileUpload,action:UploadStatus){
         case 'UPLOAD_STATUS_CHANGE':
             return {
                 ...state,
-                uploading: !state.uploading
+                // uploading: !state.uploading
             };
         case 'FILE_SELECTED':
             // console.log('file selected');
             // console.log(action.name);
             return {
                ...state,
-               selectedFileName: action.name,
-               uploading: !state.uploading 
+               inputFile: action.file,
+               selectedFileName: action.file.name,
+               fileStatus: 'PREPARE_TO_UPLOAD'
+            //    uploading: !state.uploading 
             }
         case 'FILE_UPLOAD':
             console.log(action.file);
             return {
                 ...state,
+                fileStatus: 'UPLOADING',
                 fileFromServer: funcUpload(action.file)
             }
         default: return state;

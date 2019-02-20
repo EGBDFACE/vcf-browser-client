@@ -16,9 +16,9 @@ export interface enthusiasm{
     enthusiasmLevel: number
 }
 export interface fileUpload{
-    uploaded: boolean,
-    uploading: boolean,
-    selectedFileName: string,
+    fileStatus: string,
+    selectedFileName: any,
+    inputFile: any,
     fileFromServer: object
 }
 export interface StoreState{
@@ -38,9 +38,11 @@ export const initialState:StoreState = {
         enthusiasmLevel: 1
     },
     fileUpload: {
-        uploaded: false,
-        uploading: false,
+        // uploaded: false,
+        // uploading: false,
+        fileStatus: 'FILE_NOT_SELECTED',
         selectedFileName: 'Choose a file',
+        inputFile: null,
         fileFromServer: null
     }
     // enthusiasmLevel: 1,

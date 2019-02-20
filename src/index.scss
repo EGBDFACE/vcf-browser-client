@@ -62,14 +62,28 @@ body{
     background-color: $bt-hover-color;
 }
 
-.fileUploadBt_disable{
-    opacity: 0.5;
-    cursor: not-allowed;
-}
-
-.fileUploadBt{
+@mixin fileUploadBtClassCommon{
+    margin-left: 10px;
     color: $bg-color;
     background-color: $bt-bg-color;
     outline: none;
     @include fileUploadClassCommon;
+}
+
+.fileUploadBt_Disable{
+    @include fileUploadBtClassCommon;
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.fileUploadBt_Disable > span{
+    pointer-events: none;
+}
+
+.fileUploadBt_Enable{
+    @include fileUploadBtClassCommon;
+    cursor: pointer;
+    &:hover{
+        background-color: $bt-hover-color;
+    }
 }

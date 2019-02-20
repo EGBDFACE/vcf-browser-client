@@ -21,7 +21,7 @@ interface DecrementEnthusiasm {
 // }
 export interface UploadStatus{
     type: string;
-    file?: object;
+    file?: any;
     name?: string;
 }
 
@@ -51,10 +51,11 @@ export function decrementEnthusiasm():DecrementEnthusiasm{
     }
 }
 // export function FileSlected(name:string):FileSlected{
-export function FileSlected(name:string):UploadStatus{
+export function FileSlected(file:any):UploadStatus{
+    console.log(file);
     return {
         type: FILE_SELECTED,
-        name
+        file
     }
 }
 // export function FileUpload(file:object):FileUpload{
