@@ -41,6 +41,7 @@ export const initialState:StoreState = {
         // uploaded: false,
         // uploading: false,
         fileStatus: 'FILE_NOT_SELECTED',
+        // fileStatus: 'UPLOADING',
         selectedFileName: 'Choose a file',
         inputFile: null,
         fileFromServer: null
