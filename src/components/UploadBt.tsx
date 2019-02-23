@@ -6,6 +6,7 @@ interface Props{
     // uploading: boolean,
     fileStatus: string,
     inputFile: object,
+    fileStatusStage: string,
     fileUpload: (file:object) => void
 }
 interface States{
@@ -17,22 +18,24 @@ export default class UploadBt extends React.Component<Props,States>{
         super(props);
     }
     render(){
-        const { fileStatus,inputFile,fileUpload } = this.props;
+        const { fileStatus,inputFile,fileUpload,fileStatusStage } = this.props;
+        // console.log(fileStatus);
+        // console.log(fileStatusStage);
         switch(fileStatus){
             case 'FILE_NOT_SELECTED':
                 return(
                     <div  className='fileUploadBt_Disable'>
-                        <span>Start Upload</span>
+                        <span>{fileStatusStage}</span>
                     </div>
                 )
             case 'PREPARE_TO_UPLOAD':
                 return(
-                    <button onClick = {()=>fileUpload(inputFile)} className='fileUploadBt_Enable'>Start Upload</button>
+                    <button onClick = {()=>fileUpload(inputFile)} className='fileUploadBt_Enable'>{fileStatusStage}</button>
                 )
             case 'UPLOADING':
                 return(
                     <div className='fileUploadBt_Disable'>
-                        <span>Uploading...</span>
+                        <span>{fileStatusStage}</span>
                         <LoadingLabel/>
                     </div>
                     

@@ -19,7 +19,9 @@ export interface fileUpload{
     fileStatus: string,
     selectedFileName: any,
     inputFile: any,
-    fileFromServer: object
+    fileFromServer: object,
+    fileStatusPercent: number,
+    fileStatusStage: string
 }
 export interface StoreState{
     enthusiasm:enthusiasm,
@@ -44,7 +46,9 @@ export const initialState:StoreState = {
         // fileStatus: 'UPLOADING',
         selectedFileName: 'Choose a file',
         inputFile: null,
-        fileFromServer: null
+        fileFromServer: null,
+        fileStatusPercent: 0,
+        fileStatusStage: 'Start Upload'
     }
     // enthusiasmLevel: 1,
     // languageName: 'TypeScript',

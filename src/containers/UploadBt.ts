@@ -7,6 +7,7 @@ import { Dispatch } from 'react';
 function mapStateToProps(state:StoreState){
     return{
         fileStatus: state.fileUpload.fileStatus,
+        fileStatusStage: state.fileUpload.fileStatusStage,
         inputFile: state.fileUpload.inputFile
     }
 }

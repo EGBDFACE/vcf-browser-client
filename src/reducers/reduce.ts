@@ -59,6 +59,7 @@ function fileUpload(state:fileUpload,action:UploadStatus){
         case 'UPLOAD_STATUS_CHANGE':
             return {
                 ...state,
+                fileStatus: 'FILE_NOT_SELECTED'
                 // uploading: !state.uploading
             };
         case 'FILE_SELECTED':
@@ -68,7 +69,8 @@ function fileUpload(state:fileUpload,action:UploadStatus){
                ...state,
                inputFile: action.file,
                selectedFileName: action.file.name,
-               fileStatus: 'PREPARE_TO_UPLOAD'
+               fileStatus: 'PREPARE_TO_UPLOAD',
+               fileStatusStage: 'Start Upload'
             //    uploading: !state.uploading 
             }
         case 'FILE_UPLOAD':
@@ -77,6 +79,12 @@ function fileUpload(state:fileUpload,action:UploadStatus){
                 ...state,
                 fileStatus: 'UPLOADING',
                 fileFromServer: funcUpload(action.file)
+            }
+        case 'FILE_UPLOAD_PROGRESS':
+            return {
+                ...state,
+                fileStatusStage: action.fileStatusStage,
+                fileStatusPercent: action.fileStatusPercent
             }
         default: return state;
     }

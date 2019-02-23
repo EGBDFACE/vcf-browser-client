@@ -1,5 +1,7 @@
 import * as SparkMD5 from 'spark-md5';
 import axios from 'axios';
+import store from '../store/store';
+import * as actions from '../actions/action';
 
 // interface Params{
 //     chunks:{
@@ -225,6 +227,8 @@ export function funcUpload(InputFile:any){
         switch(uploadChunkList.fileStatus){
             case 'posting':
             //   console.log(uploadChunkList);
+              let posting_uploadedPercent = Math.round((uploadChunkList.uploadedChunk.length/preloadedJSON.file.chunksNumber)*100);
+              store.dispatch(actions.FileUploadProgress(posting_uploadedPercent,'Uploading...'));
               for(var i =0 ;i<uploadChunkList.uploadedChunk.length;i++){
                   if(chunkFile.chunkMd5 == uploadChunkList.uploadedChunk[i].chunkMd5){
                     // httpConNumber++;
@@ -241,7 +245,13 @@ export function funcUpload(InputFile:any){
                    //data: 'jackchu'
                 }).then(response => {
                     // httpConNumber--;
-                    console.log(response);
+                    console.log(response.data);
+                    if(response.data.chunksNumber === response.data.uploadChunk.length){
+                        store.dispatch(actions.FileUploadProgress(100,'Uploaded!'));
+                        store.dispatch(actions.UploadStatusChange());
+                    }else{
+                        store.dispatch(actions.FileUploadProgress(Math.round((response.data.uploadedChunk.length/response.data.chunksNumber)*100),'Uploading...'));
+                    }
                 }).catch(error => {
                     // httpConNumber--;
                     console.log(error);
@@ -252,7 +262,7 @@ export function funcUpload(InputFile:any){
               break;
             case 'notposted':
             //   httpConNumber++;
-              console.log('notposted posing');
+            //   console.log('notposted posing');
               axios({
                   method: 'post',
                   // url: `http://222.20.79.250:8081/api/upload_file_part?emptyFileMd5=${chunkFile.emptyFileChunk}&chunkMd5=${chunkFile.chunkMd5}&fileMd5=${preloadedJSON.file.fileMd5}`,
@@ -261,7 +271,14 @@ export function funcUpload(InputFile:any){
               //data: 'jackchu'
               }).then(response => {
                 //   httpConNumber--;
-                  console.log(response);
+                  console.log(response.data);
+                  if(response.data.chunksNumber == response.data.uploadedChunk.length){
+                    // console.log('uploaded success and bt status change');
+                    store.dispatch(actions.FileUploadProgress(100,'Uploaded!'));
+                    store.dispatch(actions.UploadStatusChange());
+                  }else{
+                    store.dispatch(actions.FileUploadProgress(Math.round((response.data.uploadedChunk.length/response.data.chunksNumber)*100),'Uploading...'));
+                  }
               }).catch(error => {
                 //   httpConNumber--;
                   console.log(error);
@@ -273,6 +290,8 @@ export function funcUpload(InputFile:any){
         // }
         currentChunk++;
         if(currentChunk < preloadedJSON.file.chunksNumber){
+            // let chunkProgress = Math.round((currentChunk/preloadedJSON.file.chunksNumber)*100);
+            // store.dispatch(actions.FileUploadProgress(chunkProgress,'Uploading...'));
             loadChunks(); 
         // }else{
         //     checkoutInfo.fileMd5 = preloadedJSON.file.fileMd5;
@@ -287,6 +306,9 @@ export function funcUpload(InputFile:any){
         //     }).catch(error => {
         //         console.log(error);
         //     })
+        // }else{
+        //     store.dispatch(actions.FileUploadProgress(100,'Uploaded!'));
+        //     store.dispatch(actions.UploadStatusChange());
         }
     }
     function loadChunks(){
@@ -316,12 +338,23 @@ export function funcUpload(InputFile:any){
             console.log(uploadChunkList);
             console.log(uploadChunkList.fileStatus);
             if(uploadChunkList.fileStatus != 'posted'){
+                store.dispatch(actions.FileUploadProgress(0,'Uploading...'));
                 loadChunks();
+            }else{
+                store.dispatch(actions.FileUploadProgress(100,'Uploaded!'));
+                store.dispatch(actions.UploadStatusChange());
             }
+            // store.dispatch(actions.)
             //some other list information
         }).catch(error => {
             // httpConNumber--;
             console.log(error)
         })
+    }
+    totalFileReader.onprogress = function(evt){
+        if(evt.lengthComputable){
+            let percentLoaded = Math.round((evt.loaded / evt.total)*100);
+            store.dispatch(actions.FileUploadProgress(percentLoaded,'Loading...'));
+        }
     }
 }

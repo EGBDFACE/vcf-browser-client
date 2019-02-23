@@ -1,6 +1,7 @@
 import * as React from 'react';
 import UploadBt from '../containers/UploadBt';
 import UploadInput from '../containers/UploadInput';
+import FileProgress from '../containers/FileProgress';
 // import * as axios from 'axios';
 import '../index.scss';
 
@@ -30,6 +31,7 @@ export default class Upload extends React.Component<Props,States>{
             <div className='fileUpload'>
                 <UploadInput/>
                 <UploadBt/>
+                <FileProgress/>
                 {/* <button onClick={()=> fileUpload(this.fileInput.current.files[0])} className='fileUploadBt fileUploadBt_disable'>UPLOAD</button> */}
             </div>
         )

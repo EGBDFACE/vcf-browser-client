@@ -23,6 +23,9 @@ export interface UploadStatus{
     type: string;
     file?: any;
     name?: string;
+    fileStatus?: string;
+    fileStatusPercent?: number;
+    fileStatusStage?: string;
 }
 
 const UPLOAD_STATUS_CHANGE = 'UPLOAD_STATUS_CHANGE';
@@ -30,6 +33,7 @@ const INCREMENT_ENTHUSIASM = 'INCREMENT_ENTHUSIASM';
 const DECREMENT_ENTHUSIASM = 'DECREMENT_ENTHUSIASM';
 const FILE_SELECTED = 'FILE_SELECTED';
 const FILE_UPLOAD = 'FILE_UPLOAD';
+const FILE_UPLOAD_PROGRESS = 'FILE_UPLOAD_PROGRESS';
 
 export type EnthusiasmAction = IncrementEnthusiasm | DecrementEnthusiasm;
 // export type UploadStatus = UploadStatusChange | FileSlected | FileUpload;
@@ -63,5 +67,12 @@ export function FileUpload(file:object):UploadStatus{
     return {
         type: FILE_UPLOAD,
         file
+    }
+}
+export function FileUploadProgress(fileStatusPercent:number,fileStatusStage:string){
+    return {
+        type: FILE_UPLOAD_PROGRESS,
+        fileStatusPercent,
+        fileStatusStage
     }
 }
