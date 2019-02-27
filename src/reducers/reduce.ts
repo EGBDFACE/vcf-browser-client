@@ -3,6 +3,7 @@ import { EnthusiasmAction,UploadStatus, decrementEnthusiasm, FileUpload } from '
 import { StoreState, enthusiasm, fileUpload } from '../store/store';
 import { funcUpload } from './funcUpload';
 import { combineReducers } from 'redux';
+import { IgnorePlugin } from 'webpack';
 // import store from '../store/store';
 
 // const initialState:StoreState = {
@@ -65,13 +66,19 @@ function fileUpload(state:fileUpload,action:UploadStatus){
         case 'FILE_SELECTED':
             // console.log('file selected');
             // console.log(action.name);
-            return {
-               ...state,
-               inputFile: action.file,
-               selectedFileName: action.file.name,
-               fileStatus: 'PREPARE_TO_UPLOAD',
-               fileStatusStage: 'Start Upload'
-            //    uploading: !state.uploading 
+            if(action.file){
+                return {
+                    ...state,
+                    inputFile: action.file,
+                    selectedFileName: action.file.name,
+                    fileStatus: 'PREPARE_TO_UPLOAD',
+                    fileStatusStage: 'Start Upload'
+                 //    uploading: !state.uploading 
+                 }
+            }else{
+                return {
+                    ...state
+                }
             }
         case 'FILE_UPLOAD':
             console.log(action.file);
@@ -85,6 +92,11 @@ function fileUpload(state:fileUpload,action:UploadStatus){
                 ...state,
                 fileStatusStage: action.fileStatusStage,
                 fileStatusPercent: action.fileStatusPercent
+            }
+        case 'FILE_TAB_DISPLAY':
+            return{
+                ...state,
+                chunkFile: action.chunkList
             }
         default: return state;
     }

@@ -30,6 +30,5 @@ export default class FileProgress extends React.Component<Props,States>{
                 null
             )
         }
-        
     }
 }

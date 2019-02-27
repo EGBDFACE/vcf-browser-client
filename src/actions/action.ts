@@ -26,6 +26,7 @@ export interface UploadStatus{
     fileStatus?: string;
     fileStatusPercent?: number;
     fileStatusStage?: string;
+    chunkList?: string[][];
 }
 
 const UPLOAD_STATUS_CHANGE = 'UPLOAD_STATUS_CHANGE';
@@ -34,6 +35,7 @@ const DECREMENT_ENTHUSIASM = 'DECREMENT_ENTHUSIASM';
 const FILE_SELECTED = 'FILE_SELECTED';
 const FILE_UPLOAD = 'FILE_UPLOAD';
 const FILE_UPLOAD_PROGRESS = 'FILE_UPLOAD_PROGRESS';
+const FILE_TABLE_DISPLAY = 'FILE_TABLE_DISPLAY';
 
 export type EnthusiasmAction = IncrementEnthusiasm | DecrementEnthusiasm;
 // export type UploadStatus = UploadStatusChange | FileSlected | FileUpload;
@@ -74,5 +76,11 @@ export function FileUploadProgress(fileStatusPercent:number,fileStatusStage:stri
         type: FILE_UPLOAD_PROGRESS,
         fileStatusPercent,
         fileStatusStage
+    }
+}
+export function FileTabDisplay(chunkList:string[][]){
+    return {
+        type : FILE_TABLE_DISPLAY,
+        chunkList
     }
 }
