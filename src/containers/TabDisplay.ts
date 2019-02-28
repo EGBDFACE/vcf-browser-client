@@ -6,7 +6,8 @@ import { Dispatch } from 'react';
 
 function mapStateToProps(state:StoreState){
     return{
-        chunkFile: state.fileUpload.chunkFile
+        chunkFile: state.fileUpload.chunkFile,
+        totalFile: state.fileUpload.totalFile
     }
 }
 export default connect(mapStateToProps)(TabDisplay);

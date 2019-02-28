@@ -150,16 +150,11 @@ export function funcUpload(InputFile:any){
                 if(preChunkEndLine){
                     let temp = preChunkEndLine + v;
                     // console.log(temp);
-                    let tempObj = dealLine(preChunkEndLine+v);
+                    let tempArray = temp.split('\t');
                     chunkTabDisplay[indexChunkTabDisplay] = new Array();
-                    chunkTabDisplay[indexChunkTabDisplay][0] = tempObj.CHROM;
-                    chunkTabDisplay[indexChunkTabDisplay][1] = tempObj.POS;
-                    chunkTabDisplay[indexChunkTabDisplay][2] = tempObj.ID;
-                    chunkTabDisplay[indexChunkTabDisplay][3] = tempObj.REF;
-                    chunkTabDisplay[indexChunkTabDisplay][4] = tempObj.ALT;
-                    chunkTabDisplay[indexChunkTabDisplay][5] = '.';
-                    chunkTabDisplay[indexChunkTabDisplay][6] = '.';
-                    chunkTabDisplay[indexChunkTabDisplay][7] = tempObj.INFO;
+                    for(let j=0;j<tempArray.length;j++){
+                        chunkTabDisplay[indexChunkTabDisplay][j] = tempArray[j];
+                    }
                     indexChunkTabDisplay++;
                 }
             }else if(i === ChunkStringArray.length-1){
@@ -167,20 +162,54 @@ export function funcUpload(InputFile:any){
                 preChunkEndLine = v;
             }else{
                 if(v.indexOf('#') === -1){
-                    let tempObj = dealLine(v);
+                    let tmp = v.split('\t');
+                    let obj = {
+                        CHROM: tmp[0],
+                        POS: tmp[1],
+                        ID: tmp[2],
+                        REF: tmp[3],
+                        ALT: tmp[4],
+                        QUAL: '.',
+                        FILTER: '.',
+                        INFO: '.'
+                    };
                     chunkTabDisplay[indexChunkTabDisplay] = new Array();
-                    chunkTabDisplay[indexChunkTabDisplay][0] = tempObj.CHROM;
-                    chunkTabDisplay[indexChunkTabDisplay][1] = tempObj.POS;
-                    chunkTabDisplay[indexChunkTabDisplay][2] = tempObj.ID;
-                    chunkTabDisplay[indexChunkTabDisplay][3] = tempObj.REF;
-                    chunkTabDisplay[indexChunkTabDisplay][4] = tempObj.ALT;
-                    chunkTabDisplay[indexChunkTabDisplay][5] = '.';
-                    chunkTabDisplay[indexChunkTabDisplay][6] = '.';
-                    chunkTabDisplay[indexChunkTabDisplay][7] = tempObj.INFO;
+                    for(let j=0;j<tmp.length;j++){
+                        chunkTabDisplay[indexChunkTabDisplay][j] = tmp[j];
+                    }
                     indexChunkTabDisplay++;
+                    let indexINS = tmp[4].indexOf('<INS>');
+                    let indexDEL = tmp[4].indexOf('<DEL>');
+                    let indexDUP = tmp[4].indexOf('<DUP>');
+                    let indexTDUP = tmp[4].indexOf('<TDUP>');
+                    let indexEND = tmp[7].indexOf('END');
+                    if(indexINS+indexDEL+indexDUP+indexTDUP === -4){
+                        if(tmp[4].indexOf('<') == -1){}
+                        else{
+                            obj.REF = '.';
+                            // chunkTabDisplay[indexChunkTabDisplay][3] = '.';
+                        }
+                    }
+                    else{
+                        let k =0;
+                        while((tmp[7].charAt(indexEND+k) != ';')&&(k<= tmp[7].length)){
+                            k++;
+                        }
+                        if(indexINS != -1){
+                            obj.INFO = 'SVTYPE=INS;'+tmp[7].slice(indexEND,indexEND+k+1);
+                        }else if(indexDEL != -1){
+                            obj.INFO = 'SVTYPE=DEL;'+tmp[7].slice(indexEND,indexEND+k+1);
+                        }else if(indexDUP != -1){
+                            obj.INFO = 'SYTYPE=DUP;'+tmp[7].slice(indexEND,indexEND+k+1);
+                        }else if(indexTDUP != -1){
+                            obj.INFO = 'SYTYPE=TDUP;'+tmp[7].slice(indexEND,indexEND+k+1);
+                        }else{
+                            console.log('error,vep only support INS/DEL/DUP/TDUP structural variant');
+                        }
+                    }
                     // chunkTabDisplay[indexChunkTabDisplay] = chunkTabDisplay[indexChunkTabDisplay];
                     // console.log(chunkTabDisplay);
-                    preloadedJSON.chunk.chunkFile.body.push(tempObj);
+                    preloadedJSON.chunk.chunkFile.body.push(obj);
                 }else if(v.indexOf('#CHROM') != -1){
                     // preloadedJSON.chunk.chunkFile.Chrom = v; //注意这里上传的是整个的表头
                     preloadedJSON.chunk.chunkFile.Chrom = '#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO';
@@ -360,58 +389,4 @@ export function funcUpload(InputFile:any){
             store.dispatch(actions.FileUploadProgress(percentLoaded,'Loading...'));
         }
     }
-}
-function dealLine(v:string){
-    let tmp = v.split('\t');
-    let obj = {
-        CHROM: tmp[0],
-        POS: tmp[1],
-        ID: tmp[2],
-        REF: tmp[3],
-        ALT: tmp[4],
-        QUAL: '.',
-        FILTER: '.',
-        INFO: '.'
-    };
-    // console.log(i);
-    // chunkTabDisplay[indexChunkTabDisplay] = new Array();
-    // chunkTabDisplay[indexChunkTabDisplay][0] = tmp[0];
-    // chunkTabDisplay[indexChunkTabDisplay][1] = tmp[1];
-    // chunkTabDisplay[indexChunkTabDisplay][2] = tmp[2];
-    // chunkTabDisplay[indexChunkTabDisplay][3] = tmp[3];
-    // chunkTabDisplay[indexChunkTabDisplay][4] = tmp[4];
-    // chunkTabDisplay[indexChunkTabDisplay][5] = '.';
-    // chunkTabDisplay[indexChunkTabDisplay][6] = '.';
-    // chunkTabDisplay[indexChunkTabDisplay][7] = '.';
-    // console.log(tmp)
-    let indexINS = tmp[4].indexOf('<INS>');
-    let indexDEL = tmp[4].indexOf('<DEL>');
-    let indexDUP = tmp[4].indexOf('<DUP>');
-    let indexTDUP = tmp[4].indexOf('<TDUP>');
-    let indexEND = tmp[7].indexOf('END');
-    if(indexINS+indexDEL+indexDUP+indexTDUP === -4){
-        if(tmp[4].indexOf('<') == -1){}
-        else{
-            obj.REF = '.';
-            // chunkTabDisplay[indexChunkTabDisplay][3] = '.';
-        }
-    }
-    else{
-        let k =0;
-        while((tmp[7].charAt(indexEND+k) != ';')&&(k<= tmp[7].length)){
-            k++;
-        }
-        if(indexINS != -1){
-            obj.INFO = 'SVTYPE=INS;'+tmp[7].slice(indexEND,indexEND+k+1);
-        }else if(indexDEL != -1){
-            obj.INFO = 'SVTYPE=DEL;'+tmp[7].slice(indexEND,indexEND+k+1);
-        }else if(indexDUP != -1){
-            obj.INFO = 'SYTYPE=DUP;'+tmp[7].slice(indexEND,indexEND+k+1);
-        }else if(indexTDUP != -1){
-            obj.INFO = 'SYTYPE=TDUP;'+tmp[7].slice(indexEND,indexEND+k+1);
-        }else{
-            console.log('error,vep only support INS/DEL/DUP/TDUP structural variant');
-        }
-    }
-    return obj;
 }

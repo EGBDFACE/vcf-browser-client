@@ -6,7 +6,7 @@ import store from '../store/store';
 
 interface Props{
     chunkFile: string[][];
-    // totalFile: string[][];
+    totalFile: string[][];
 }
 interface States{
 
@@ -50,7 +50,8 @@ export default class TabDisplay extends React.Component<Props,States>{
         // console.log(this);
         // console.log(TabDisplay)
         // const chunkFile = TabDisplay.ChunkList;
-        const chunkFile = this.props.chunkFile;
+        // const chunkFile = this.props.chunkFile;
+        const totalFile = this.props.totalFile;
         // console.log(chunkFile);
         // const user = chunkFile[rowIndex][columnIndex];
         // const content = isScrolling ? '...' : <User user= {user}/> ;
@@ -59,23 +60,25 @@ export default class TabDisplay extends React.Component<Props,States>{
                 key={key}
                 style={style}    
             >
-            {chunkFile[rowIndex][columnIndex]}
+            {totalFile[rowIndex][columnIndex]}
             {/* {list[rowIndex][columnIndex]} */}
             </div>
         )
     }
     render(){
         // console.log(this)
-        const chunkFile = this.props.chunkFile;
+        // console.log(this.props.totalFile);
+        // const chunkFile = this.props.chunkFile;
+        const totalFile = this.props.totalFile;
         // console.log(chunkFile);
         return(
             <Grid
               cellRenderer={this.cellRenderer}
-              columnCount={chunkFile[0]?chunkFile[0].length:0}
+              columnCount={totalFile[0]?totalFile[0].length:0}
             //   columnCount={list[0].length}
               columnWidth={100}
               height={300}
-              rowCount={chunkFile?chunkFile.length:0}
+              rowCount={totalFile?totalFile.length:0}
             //   rowCount={list.length}
               rowHeight={30}
               width={300}
