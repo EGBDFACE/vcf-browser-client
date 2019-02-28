@@ -93,7 +93,9 @@ function fileUpload(state:fileUpload,action:UploadStatus){
                 fileStatusStage: action.fileStatusStage,
                 fileStatusPercent: action.fileStatusPercent
             }
-        case 'FILE_TAB_DISPLAY':
+        case 'FILE_TABLE_DISPLAY':
+            console.log(state.chunkFile);
+            console.log(action.chunkList);
             return{
                 ...state,
                 chunkFile: action.chunkList

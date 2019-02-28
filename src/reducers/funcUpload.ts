@@ -68,7 +68,7 @@ interface preloadedFormat{
 //     }[]
 // }
 export function funcUpload(InputFile:any){
-    console.log(InputFile);
+    // console.log(InputFile);
     // var file_get = document.getElementById('file').files[0];
     // console.log(file_get);
     // let InputFile = this.fileInput.current.files[0];
@@ -122,7 +122,7 @@ export function funcUpload(InputFile:any){
         // console.log(e.target.result);
         // console.log(sparkTotal.end());
         preloadedJSON.file.fileMd5 = sparkTotal.end();
-        console.log(preloadedJSON.file.fileMd5);
+        // console.log(preloadedJSON.file.fileMd5);
     };
     let preChunkEndLine:string = '';
     chunkFileReader.onload = function(e:any){
@@ -149,7 +149,7 @@ export function funcUpload(InputFile:any){
                 preloadedJSON.chunk.chunkFile.startLine = v;//这里将换行符去掉了（就是说当分片很不幸分的正好的时候后台难以区分和恢复
                 if(preChunkEndLine){
                     let temp = preChunkEndLine + v;
-                    console.log(temp);
+                    // console.log(temp);
                     let tempObj = dealLine(preChunkEndLine+v);
                     chunkTabDisplay[indexChunkTabDisplay] = new Array();
                     chunkTabDisplay[indexChunkTabDisplay][0] = tempObj.CHROM;
@@ -194,7 +194,7 @@ export function funcUpload(InputFile:any){
                 }
             }
         });
-        console.log(chunkTabDisplay);
+        // console.log(chunkTabDisplay);
         store.dispatch(actions.FileTabDisplay(chunkTabDisplay));
         // console.log(preloadedJSON.chunk.chunkMd5);
         // console.log(preloadedJSON.chunk.chunkNumber);
@@ -213,7 +213,7 @@ export function funcUpload(InputFile:any){
         Object.assign(chunkFile,chunkChunk);
         // chunkFile.emptyFileChunk = firstChunkMd5;
         // console.log(chunkFile.chunkNumber);
-        console.log(chunkFile);
+        // console.log(chunkFile);
         // let temp:string[][] = [];
         // if(chunkFile.chunkNumber === 0){
         //     for(var i=0;i<chunkFile.chunkFile.body.length;i++){
@@ -274,7 +274,7 @@ export function funcUpload(InputFile:any){
               //data: 'jackchu'
               }).then(response => {
                 //   httpConNumber--;
-                  console.log(response.data);
+                //   console.log(response.data);
                   if(response.data.chunksNumber == response.data.uploadedChunk.length){
                     // console.log('uploaded success and bt status change');
                     store.dispatch(actions.FileUploadProgress(100,'Uploaded!'));

@@ -79,6 +79,7 @@ export function FileUploadProgress(fileStatusPercent:number,fileStatusStage:stri
     }
 }
 export function FileTabDisplay(chunkList:string[][]){
+    // console.log(chunkList);
     return {
         type : FILE_TABLE_DISPLAY,
         chunkList

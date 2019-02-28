@@ -4,6 +4,8 @@ import {Link} from 'react-router-dom';
 import Upload from '../components/Upload';
 // import Upload from '../containers/Upload';
 import '../index.scss';
+// import TabDisplay from '../components/TabDisplay';
+import TabDisplay from '../containers/TabDisplay';
 
 export default class Home extends React.Component<any,any>{
     render(){
@@ -13,6 +15,9 @@ export default class Home extends React.Component<any,any>{
                 <div><Link to="/hello">goto page hello</Link></div>
                 <div><Link to="/two">goto page two</Link></div>
                 <Upload/>
+                <div className='TableDisplay'>
+                <TabDisplay/>
+                </div>
             </div>
         );
     }

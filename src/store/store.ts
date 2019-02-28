@@ -23,7 +23,7 @@ export interface fileUpload{
     fileStatusPercent: number,
     fileStatusStage: string,
     chunkFile: string[][],
-    // totalFile: string[][]
+    totalFile: string[][]
 }
 export interface StoreState{
     enthusiasm:enthusiasm,
@@ -51,8 +51,8 @@ export const initialState:StoreState = {
         fileFromServer: null,
         fileStatusPercent: 0,
         fileStatusStage: 'Start Upload',
-        chunkFile: []
-        // totalFile: null
+        chunkFile: [],
+        totalFile: []
     }
     // enthusiasmLevel: 1,
     // languageName: 'TypeScript',
