@@ -174,7 +174,8 @@ export function funcUpload(InputFile:any){
                         INFO: '.'
                     };
                     chunkTabDisplay[indexChunkTabDisplay] = new Array();
-                    for(let j=0;j<tmp.length;j++){
+                    // for(let j=0;j<tmp.length;j++){ //存在内存不够的问题
+                    for(let j=0;j<8;j++){
                         chunkTabDisplay[indexChunkTabDisplay][j] = tmp[j];
                     }
                     indexChunkTabDisplay++;

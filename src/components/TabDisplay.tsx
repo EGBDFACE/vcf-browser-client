@@ -81,7 +81,7 @@ export default class TabDisplay extends React.Component<Props,States>{
               rowCount={totalFile?totalFile.length:0}
             //   rowCount={list.length}
               rowHeight={30}
-              width={300}
+              width={500}
               />
         )
     }
