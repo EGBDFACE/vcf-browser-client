@@ -139,8 +139,9 @@ export function funcUpload(InputFile:any){
         // console.log(preloadedJSON.chunk.chunkFile.body);
         let ChunkStringArray = e.target.result.trim().split('\n');
         // console.log(ChunkStringArray);
-        let chunkTabDisplay:string[][] =[];
-        let indexChunkTabDisplay:number = 0;
+        // let chunkTabDisplay:string[][] =[];
+        let chunkTableList: object [] = [];
+        // let indexChunkTabDisplay:number = 0;
         ChunkStringArray.forEach(function(v:string,i:number=0){
             // 前端默认VCF格式为标准的VCF4.0 4.1 4.2版本
             //（我这里采用的就是#CHROM字段是按照#CHROM POS ID REF ALT QUAL FILTER INF顺序的）
@@ -150,67 +151,25 @@ export function funcUpload(InputFile:any){
                 if(preChunkEndLine){
                     let temp = preChunkEndLine + v;
                     // console.log(temp);
-                    let tempArray = temp.split('\t');
-                    chunkTabDisplay[indexChunkTabDisplay] = new Array();
-                    for(let j=0;j<tempArray.length;j++){
-                        chunkTabDisplay[indexChunkTabDisplay][j] = tempArray[j];
-                    }
-                    indexChunkTabDisplay++;
+                    // let tempArray = temp.split('\t');
+                    let tempObj = dealLine(temp);
+                    chunkTableList.push(tempObj.obj_tabDisplay);
+                    // chunkTabDisplay[indexChunkTabDisplay] = new Array();
+                    // for(let j=0;j<tempArray.length;j++){
+                    //     chunkTabDisplay[indexChunkTabDisplay][j] = tempArray[j];
+                    // }
+                    // indexChunkTabDisplay++;
                 }
             }else if(i === ChunkStringArray.length-1){
                 preloadedJSON.chunk.chunkFile.endLine = v;//只好在服务端做一个简单的文件分析判别
                 preChunkEndLine = v;
             }else{
                 if(v.indexOf('#') === -1){
-                    let tmp = v.split('\t');
-                    let obj = {
-                        CHROM: tmp[0],
-                        POS: tmp[1],
-                        ID: tmp[2],
-                        REF: tmp[3],
-                        ALT: tmp[4],
-                        QUAL: '.',
-                        FILTER: '.',
-                        INFO: '.'
-                    };
-                    chunkTabDisplay[indexChunkTabDisplay] = new Array();
-                    // for(let j=0;j<tmp.length;j++){ //存在内存不够的问题
-                    for(let j=0;j<8;j++){
-                        chunkTabDisplay[indexChunkTabDisplay][j] = tmp[j];
-                    }
-                    indexChunkTabDisplay++;
-                    let indexINS = tmp[4].indexOf('<INS>');
-                    let indexDEL = tmp[4].indexOf('<DEL>');
-                    let indexDUP = tmp[4].indexOf('<DUP>');
-                    let indexTDUP = tmp[4].indexOf('<TDUP>');
-                    let indexEND = tmp[7].indexOf('END');
-                    if(indexINS+indexDEL+indexDUP+indexTDUP === -4){
-                        if(tmp[4].indexOf('<') == -1){}
-                        else{
-                            obj.REF = '.';
-                            // chunkTabDisplay[indexChunkTabDisplay][3] = '.';
-                        }
-                    }
-                    else{
-                        let k =0;
-                        while((tmp[7].charAt(indexEND+k) != ';')&&(k<= tmp[7].length)){
-                            k++;
-                        }
-                        if(indexINS != -1){
-                            obj.INFO = 'SVTYPE=INS;'+tmp[7].slice(indexEND,indexEND+k+1);
-                        }else if(indexDEL != -1){
-                            obj.INFO = 'SVTYPE=DEL;'+tmp[7].slice(indexEND,indexEND+k+1);
-                        }else if(indexDUP != -1){
-                            obj.INFO = 'SYTYPE=DUP;'+tmp[7].slice(indexEND,indexEND+k+1);
-                        }else if(indexTDUP != -1){
-                            obj.INFO = 'SYTYPE=TDUP;'+tmp[7].slice(indexEND,indexEND+k+1);
-                        }else{
-                            console.log('error,vep only support INS/DEL/DUP/TDUP structural variant');
-                        }
-                    }
+                    let obj = dealLine(v);
                     // chunkTabDisplay[indexChunkTabDisplay] = chunkTabDisplay[indexChunkTabDisplay];
                     // console.log(chunkTabDisplay);
-                    preloadedJSON.chunk.chunkFile.body.push(obj);
+                    chunkTableList.push(obj.obj_tabDisplay);
+                    preloadedJSON.chunk.chunkFile.body.push(obj.obj_upload);
                 }else if(v.indexOf('#CHROM') != -1){
                     // preloadedJSON.chunk.chunkFile.Chrom = v; //注意这里上传的是整个的表头
                     preloadedJSON.chunk.chunkFile.Chrom = '#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO';
@@ -225,7 +184,8 @@ export function funcUpload(InputFile:any){
             }
         });
         // console.log(chunkTabDisplay);
-        store.dispatch(actions.FileTabDisplay(chunkTabDisplay));
+        // store.dispatch(actions.FileTabDisplay(chunkTabDisplay));
+        store.dispatch(actions.FileTabDisplay(chunkTableList));
         // console.log(preloadedJSON.chunk.chunkMd5);
         // console.log(preloadedJSON.chunk.chunkNumber);
         // console.log(preloadedJSON.chunk.chunkFile.body);
@@ -317,6 +277,8 @@ export function funcUpload(InputFile:any){
                   console.log(error);
               })
               break;
+            case 'posted':
+              break;
         }
         // while(httpConNumber >= 6){
         //     console.log('max http connection is set to 6 , now waiting for a connection finished');
@@ -372,11 +334,11 @@ export function funcUpload(InputFile:any){
             console.log(uploadChunkList.fileStatus);
             if(uploadChunkList.fileStatus != 'posted'){
                 store.dispatch(actions.FileUploadProgress(0,'Uploading...'));
-                loadChunks();
             }else{
                 store.dispatch(actions.FileUploadProgress(100,'Uploaded!'));
                 store.dispatch(actions.UploadStatusChange());
             }
+            loadChunks();
             // store.dispatch(actions.)
             //some other list information
         }).catch(error => {
@@ -390,4 +352,63 @@ export function funcUpload(InputFile:any){
             store.dispatch(actions.FileUploadProgress(percentLoaded,'Loading...'));
         }
     }
+}
+function dealLine(v:string){
+    let tmp = v.split('\t');
+    let obj_upload = {
+        CHROM: tmp[0],
+        POS: tmp[1],
+        ID: tmp[2],
+        REF: tmp[3],
+        ALT: tmp[4],
+        QUAL: '.',
+        FILTER: '.',
+        INFO: '.'
+    };
+    let obj_tabDisplay ={
+        CHROM:tmp[0],
+        POS:tmp[1],
+        ID:tmp[2],
+        REF:tmp[3],
+        ALT: tmp[4],
+        QUAL: tmp[5],
+        FILTER: tmp[6],
+        INFO: tmp[7]
+    };
+    // chunkTabDisplay[indexChunkTabDisplay] = new Array();
+    // for(let j=0;j<tmp.length;j++){ //存在内存不够的问题
+    // for(let j=0;j<8;j++){
+    //     chunkTabDisplay[indexChunkTabDisplay][j] = tmp[j];
+    // }
+    // indexChunkTabDisplay++;
+    let indexINS = tmp[4].indexOf('<INS>');
+    let indexDEL = tmp[4].indexOf('<DEL>');
+    let indexDUP = tmp[4].indexOf('<DUP>');
+    let indexTDUP = tmp[4].indexOf('<TDUP>');
+    let indexEND = tmp[7].indexOf('END');
+    if(indexINS+indexDEL+indexDUP+indexTDUP === -4){
+        if(tmp[4].indexOf('<') == -1){}
+        else{
+            obj_upload.REF = '.';
+            // chunkTabDisplay[indexChunkTabDisplay][3] = '.';
+        }
+    }
+    else{
+        let k =0;
+        while((tmp[7].charAt(indexEND+k) != ';')&&(k<= tmp[7].length)){
+            k++;
+        }
+        if(indexINS != -1){
+            obj_upload.INFO = 'SVTYPE=INS;'+tmp[7].slice(indexEND,indexEND+k+1);
+        }else if(indexDEL != -1){
+            obj_upload.INFO = 'SVTYPE=DEL;'+tmp[7].slice(indexEND,indexEND+k+1);
+        }else if(indexDUP != -1){
+            obj_upload.INFO = 'SYTYPE=DUP;'+tmp[7].slice(indexEND,indexEND+k+1);
+        }else if(indexTDUP != -1){
+            obj_upload.INFO = 'SYTYPE=TDUP;'+tmp[7].slice(indexEND,indexEND+k+1);
+        }else{
+            console.log('error,vep only support INS/DEL/DUP/TDUP structural variant');
+        }
+    }
+    return {obj_upload:obj_upload,obj_tabDisplay:obj_tabDisplay};
 }
