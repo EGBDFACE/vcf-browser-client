@@ -22,9 +22,10 @@ export interface fileUpload{
     fileFromServer: object,
     fileStatusPercent: number,
     fileStatusStage: string,
-    // chunkFile: string[][],
-    chunkFile: object [],
-    totalFile: object []
+    chunkFile: string[][],
+    totalFile: string[][]
+    // chunkFile: object [],
+    // totalFile: object []
 }
 export interface StoreState{
     enthusiasm:enthusiasm,

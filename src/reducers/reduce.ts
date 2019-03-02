@@ -98,10 +98,10 @@ function fileUpload(state:fileUpload,action:UploadStatus){
             // console.log(action.chunkList);
             return{
                 ...state,
-                // totalFile: state.totalFile.concat(action.chunkList),
-                // chunkFile: action.chunkList,
-                totalFile: state.totalFile.concat(action.chunkTabList),
-                chunkFile: action.chunkTabList
+                totalFile: state.totalFile.concat(action.chunkList),
+                chunkFile: action.chunkList,
+                // totalFile: state.totalFile.concat(action.chunkTabList),
+                // chunkFile: action.chunkTabList
             }
         default: return state;
     }

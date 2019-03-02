@@ -26,8 +26,8 @@ export interface UploadStatus{
     fileStatus?: string;
     fileStatusPercent?: number;
     fileStatusStage?: string;
-    // chunkList?: string[][];
-    chunkTabList?: object[];
+    chunkList?: string[][];
+    // chunkTabList?: object[];
 }
 
 const UPLOAD_STATUS_CHANGE = 'UPLOAD_STATUS_CHANGE';
@@ -79,12 +79,12 @@ export function FileUploadProgress(fileStatusPercent:number,fileStatusStage:stri
         fileStatusStage
     }
 }
-// export function FileTabDisplay(chunkList:string[][]){
-export function FileTabDisplay(chunkTabList:object[]){
+export function FileTabDisplay(chunkList:string[][]){
+// export function FileTabDisplay(chunkTabList:object[]){
     // console.log(chunkList);
     return {
         type : FILE_TABLE_DISPLAY,
-        // chunkList
-        chunkTabList
+        chunkList
+        // chunkTabList
     }
 }

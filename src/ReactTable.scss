@@ -1,0 +1,65 @@
+@import './index.scss';
+*{
+    box-sizing: border-box;
+}
+.tableArea{
+    display:block;
+    border-radius: 5px;
+    border: solid 1px #ddd;
+    overflow: scroll;
+}
+.tableHeader{
+    display: flex;
+    min-width: 930px;
+    // background: rgba(42,117,146,1);
+    background-color: $bt-bg-color;
+    border-bottom: solid 1px rgba(0,0,0,0.2);
+    color: white;
+}
+.tableHeaderCell{
+    box-sizing: border-box;
+    flex: 0 0 auto;
+    width: 100px;
+    border-right: solid 1px rgba(0,0,0,0.1);
+    padding: 0.6rem;
+    font-weight: bold;
+}
+.tableFooter{
+    @extend .tableHeader;
+    border-bottom: 0;
+    padding: 0.6rem;
+    align-items: center;
+}
+.tableFooter > button{
+    font-size: 1rem;
+    padding: 0.5rem 0.7rem;
+    background: white;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-right: 5px;
+}
+.tableFooter > span{
+    margin-right: 5px;
+}
+.tableFooter > span > input {
+    font-size: 1rem;
+    padding: 0.5rem 0.7rem;
+    background: white;
+    border-radius: 5px;
+    border: 1px solid rgba(0,0,0,0.2);
+    max-width: 100%;
+}
+.tableFooter > select{
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background: white;
+    border: 0;
+    margin: 0;
+    color: black;
+    font-size: 1rem;
+    border-radius: 5px;
+    padding: 0.5rem 0.7rem;
+    border: 0;
+    cursor: pointer;
+}
