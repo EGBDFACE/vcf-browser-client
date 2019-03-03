@@ -6,7 +6,8 @@ import Upload from '../components/Upload';
 import '../index.scss';
 // import TabDisplay from '../components/TabDisplay';
 // import TabDisplay from '../containers/TabDisplay';
-import TableFrame from '../components/TableFrame';
+// import TableFrame from '../components/TableFrame';
+import TableFrame from '../containers/TableFrame';
 
 export default class Home extends React.Component<any,any>{
     render(){

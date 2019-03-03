@@ -33,10 +33,10 @@
 .tableFooter > button{
     font-size: 1rem;
     padding: 0.5rem 0.7rem;
-    background: white;
     border-radius: 5px;
-    cursor: pointer;
     margin-right: 5px;
+    background: white;
+    cursor: pointer;
 }
 .tableFooter > span{
     margin-right: 5px;
@@ -47,8 +47,12 @@
     background: white;
     border-radius: 5px;
     border: 1px solid rgba(0,0,0,0.2);
-    max-width: 100%;
+    max-width: 80%;
 }
+.tableFooter > span > input::-webkit-outer-spin-button,
+.tableFooter > span > input::-webkit-inner-spin-button{
+    -webkit-appearance: none;
+} 
 .tableFooter > select{
     -webkit-appearance: none;
     -moz-appearance: none;
@@ -62,4 +66,14 @@
     padding: 0.5rem 0.7rem;
     border: 0;
     cursor: pointer;
+}
+.tableBtDisable{
+    font-size: 1rem;
+    padding: 0.5rem 0.7rem;
+    border-radius: 5px;
+    margin-right: 5px;
+    cursor: not-allowed;
+    background: white;
+    color: black;
+    opacity: 0.5;
 }

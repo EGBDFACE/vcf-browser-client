@@ -29,6 +29,11 @@ export interface UploadStatus{
     chunkList?: string[][];
     // chunkTabList?: object[];
 }
+export interface TableDisplay{
+    type: string;
+    inputPageNumber?: number;
+    singlePageNumber?: number;
+}
 
 const UPLOAD_STATUS_CHANGE = 'UPLOAD_STATUS_CHANGE';
 const INCREMENT_ENTHUSIASM = 'INCREMENT_ENTHUSIASM';
@@ -37,6 +42,10 @@ const FILE_SELECTED = 'FILE_SELECTED';
 const FILE_UPLOAD = 'FILE_UPLOAD';
 const FILE_UPLOAD_PROGRESS = 'FILE_UPLOAD_PROGRESS';
 const FILE_TABLE_DISPLAY = 'FILE_TABLE_DISPLAY';
+const VCF_TABLE_FRAME_PREVIOUS = 'VCF_TABLE_FRAME_PREVIOUS';
+const VCF_TABLE_FRAME_NEXT = 'VCF_TABLE_FRAME_NEXT';
+const VCF_TABLE_FRAME_INPUT_PAGE = 'VCF_TABLE_FRAME_INPUT_PAGE';
+const VCF_TABLE_FRAME_SINGLE_PAGE = 'VCF_TABLE_FRAME_SINGLE_PAGE';
 
 export type EnthusiasmAction = IncrementEnthusiasm | DecrementEnthusiasm;
 // export type UploadStatus = UploadStatusChange | FileSlected | FileUpload;
@@ -86,5 +95,27 @@ export function FileTabDisplay(chunkList:string[][]){
         type : FILE_TABLE_DISPLAY,
         chunkList
         // chunkTabList
+    }
+}
+export function VCFTableFrame_Previous():TableDisplay{
+    return {
+        type: VCF_TABLE_FRAME_PREVIOUS
+    }
+}
+export function VCFTableFrame_Next():TableDisplay{
+    return{
+        type: VCF_TABLE_FRAME_NEXT
+    }
+}
+export function VCFTableFrame_InputPage(inputPageNumber:number):TableDisplay{
+    return{
+        type: VCF_TABLE_FRAME_INPUT_PAGE,
+        inputPageNumber
+    }
+}
+export function VCFTableFrame_SinglePage(singlePageNumber:number):TableDisplay{
+    return{
+        type: VCF_TABLE_FRAME_SINGLE_PAGE,
+        singlePageNumber
     }
 }

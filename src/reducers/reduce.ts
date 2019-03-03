@@ -1,9 +1,10 @@
-import { EnthusiasmAction,UploadStatus, decrementEnthusiasm, FileUpload } from '../actions/action';
+import { EnthusiasmAction,UploadStatus, TableDisplay } from '../actions/action';
 // import {StoreState} from '../types/storeInterface';
-import { StoreState, enthusiasm, fileUpload } from '../store/store';
+import { StoreState, enthusiasm, fileUpload,tableFrameVCF } from '../store/store';
 import { funcUpload } from './funcUpload';
 import { combineReducers } from 'redux';
 import { IgnorePlugin } from 'webpack';
+import { Table } from 'react-virtualized';
 // import store from '../store/store';
 
 // const initialState:StoreState = {
@@ -31,7 +32,8 @@ const Reducer = (state:StoreState,action:any) => {
     // console.log(state);
     return{
         enthusiasm: enthusiasm(state.enthusiasm,action),
-        fileUpload: fileUpload(state.fileUpload,action)
+        fileUpload: fileUpload(state.fileUpload,action),
+        tableFrameVCF: tableDisplayVCF(state.tableFrameVCF,action)
     }
 }
 function enthusiasm (state:enthusiasm,action:EnthusiasmAction){
@@ -106,6 +108,36 @@ function fileUpload(state:fileUpload,action:UploadStatus){
         default: return state;
     }
 }
+function tableDisplayVCF(state:tableFrameVCF,action:TableDisplay){
+    switch(action.type){
+        case 'VCF_TABLE_FRAME_PREVIOUS':
+          return{
+              ...state,
+              currentPageNumber: state.currentPageNumber - 1
+          }
+        case 'VCF_TABLE_FRAME_NEXT':
+          return{
+              ...state,
+              currentPageNumber: state.currentPageNumber + 1
+          }
+        case 'VCF_TABLE_FRAME_INPUT_PAGE':
+          if((action.inputPageNumber >=1 )&&(action.inputPageNumber <= state.totalPageNumber)){
+              return{
+                  ...state,
+                  currentPageNumber: action.inputPageNumber
+              }
+          }else{
+              return {...state}
+          }
+        case 'VCF_TABLE_FRAME_SINGLE_PAGE':
+          return{
+              ...state,
+              singlePageDisplayNumber: action.singlePageNumber
+          }
+        default : return state;
+    }
+}
+
 // const Reducer = combineReducers({
 //     languageName:enthusiasm,
 //     enthusiasmLevel:enthusiasm,
