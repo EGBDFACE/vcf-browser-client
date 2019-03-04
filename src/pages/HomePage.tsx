@@ -17,10 +17,7 @@ export default class Home extends React.Component<any,any>{
                 <div><Link to="/hello">goto page hello</Link></div>
                 <div><Link to="/two">goto page two</Link></div>
                 <Upload/>
-                <div className='TableDisplay'>
-                {/* <TabDisplay/> */}
-                  <TableFrame />
-                </div>
+                <TableFrame />
             </div>
         );
     }

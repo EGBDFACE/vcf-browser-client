@@ -125,6 +125,7 @@ export function funcUpload(InputFile:any){
         // console.log(preloadedJSON.file.fileMd5);
     };
     let preChunkEndLine:string = '';
+    let totalIndexTabDisplay:number = 0;
     chunkFileReader.onload = function(e:any){
         let sparkChunk = new SparkMD5();
         preloadedJSON.chunk.chunkNumber = currentChunk;
@@ -156,10 +157,12 @@ export function funcUpload(InputFile:any){
                     // chunkTableList.push(tempObj.obj_tabDisplay);
                     chunkTabDisplay[indexChunkTabDisplay] = new Array();
                     // for(let j=0;j<tempArray.length;j++){
+                    chunkTabDisplay[indexChunkTabDisplay][0] = totalIndexTabDisplay.toString();
                     for(let j=0;j<8;j++){
-                        chunkTabDisplay[indexChunkTabDisplay][j] = tempArray[j];
+                        chunkTabDisplay[indexChunkTabDisplay][j+1] = tempArray[j];
                     }
                     indexChunkTabDisplay++;
+                    totalIndexTabDisplay++;
                 }
             }else if(i === ChunkStringArray.length-1){
                 preloadedJSON.chunk.chunkFile.endLine = v;//只好在服务端做一个简单的文件分析判别
@@ -179,10 +182,12 @@ export function funcUpload(InputFile:any){
                     };
                     chunkTabDisplay[indexChunkTabDisplay] = new Array();
                     // for(let j=0;j<tmp.length;j++){ //存在内存不够的问题
+                    chunkTabDisplay[indexChunkTabDisplay][0] = totalIndexTabDisplay.toString();
                     for(let j=0;j<8;j++){
-                        chunkTabDisplay[indexChunkTabDisplay][j] = tmp[j];
+                        chunkTabDisplay[indexChunkTabDisplay][j+1] = tmp[j];
                     }
                     indexChunkTabDisplay++;
+                    totalIndexTabDisplay++;
                     let indexINS = tmp[4].indexOf('<INS>');
                     let indexDEL = tmp[4].indexOf('<DEL>');
                     let indexDUP = tmp[4].indexOf('<DUP>');
@@ -233,6 +238,7 @@ export function funcUpload(InputFile:any){
         });
         // console.log(chunkTabDisplay);
         store.dispatch(actions.FileTabDisplay(chunkTabDisplay));
+        // store.dispatch(actions.VCFTableFrame_TotalPage(chunkTabDisplay.length));
         // store.dispatch(actions.FileTabDisplay(chunkTableList));
         // console.log(preloadedJSON.chunk.chunkMd5);
         // console.log(preloadedJSON.chunk.chunkNumber);

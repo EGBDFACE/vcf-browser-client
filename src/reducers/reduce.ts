@@ -74,7 +74,9 @@ function fileUpload(state:fileUpload,action:UploadStatus){
                     inputFile: action.file,
                     selectedFileName: action.file.name,
                     fileStatus: 'PREPARE_TO_UPLOAD',
-                    fileStatusStage: 'Start Upload'
+                    fileStatusStage: 'Start Upload',
+                    chunkFile:[],
+                    totalFile:[]
                  //    uploading: !state.uploading 
                  }
             }else{
@@ -121,7 +123,7 @@ function tableDisplayVCF(state:tableFrameVCF,action:TableDisplay){
               currentPageNumber: state.currentPageNumber + 1
           }
         case 'VCF_TABLE_FRAME_INPUT_PAGE':
-          if((action.inputPageNumber >=1 )&&(action.inputPageNumber <= state.totalPageNumber)){
+          if((action.inputPageNumber >=1 )&&(action.inputPageNumber <= action.totalPageNumber)){
               return{
                   ...state,
                   currentPageNumber: action.inputPageNumber
@@ -132,8 +134,15 @@ function tableDisplayVCF(state:tableFrameVCF,action:TableDisplay){
         case 'VCF_TABLE_FRAME_SINGLE_PAGE':
           return{
               ...state,
+              currentPageNumber: Math.floor((state.currentPageNumber-1)*state.singlePageDisplayNumber/action.singlePageNumber+1),
               singlePageDisplayNumber: action.singlePageNumber
           }
+        // case 'VCF_TABLE_FRAME_TOTAL_PAGE':
+        //   console.log(state.singlePageDisplayNumber);
+        //   return{
+        //       ...state,
+        //       totalPageNumber: Math.ceil((state.totalPageNumber+action.totalPageNumber)/state.singlePageDisplayNumber)
+        //   }
         default : return state;
     }
 }

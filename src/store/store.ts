@@ -65,7 +65,7 @@ export const initialState:StoreState = {
     },
     tableFrameVCF: {
         currentPageNumber: 1,
-        totalPageNumber: 10,
+        totalPageNumber: 0,
         singlePageDisplayNumber: 10
     }
     // enthusiasmLevel: 1,

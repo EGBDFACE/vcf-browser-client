@@ -10,7 +10,7 @@
 }
 .tableHeader{
     display: flex;
-    min-width: 930px;
+    min-width: 1200px;
     // background: rgba(42,117,146,1);
     background-color: $bt-bg-color;
     border-bottom: solid 1px rgba(0,0,0,0.2);
@@ -23,6 +23,14 @@
     border-right: solid 1px rgba(0,0,0,0.1);
     padding: 0.6rem;
     font-weight: bold;
+    overflow: auto;
+}
+.tableHeaderCell::-webkit-scrollbar{
+    display:none;
+}
+.tableHeaderCell:last-child{
+    border-right: 0;
+    width: 400px;
 }
 .tableFooter{
     @extend .tableHeader;

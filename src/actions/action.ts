@@ -33,6 +33,7 @@ export interface TableDisplay{
     type: string;
     inputPageNumber?: number;
     singlePageNumber?: number;
+    totalPageNumber?: number;
 }
 
 const UPLOAD_STATUS_CHANGE = 'UPLOAD_STATUS_CHANGE';
@@ -46,6 +47,7 @@ const VCF_TABLE_FRAME_PREVIOUS = 'VCF_TABLE_FRAME_PREVIOUS';
 const VCF_TABLE_FRAME_NEXT = 'VCF_TABLE_FRAME_NEXT';
 const VCF_TABLE_FRAME_INPUT_PAGE = 'VCF_TABLE_FRAME_INPUT_PAGE';
 const VCF_TABLE_FRAME_SINGLE_PAGE = 'VCF_TABLE_FRAME_SINGLE_PAGE';
+// const VCF_TABLE_FRAME_TOTAL_PAGE = 'VCF_TABLE_FRAME_TOTAL_PAGE';
 
 export type EnthusiasmAction = IncrementEnthusiasm | DecrementEnthusiasm;
 // export type UploadStatus = UploadStatusChange | FileSlected | FileUpload;
@@ -107,10 +109,11 @@ export function VCFTableFrame_Next():TableDisplay{
         type: VCF_TABLE_FRAME_NEXT
     }
 }
-export function VCFTableFrame_InputPage(inputPageNumber:number):TableDisplay{
+export function VCFTableFrame_InputPage(totalPageNumber:number,inputPageNumber:number):TableDisplay{
     return{
         type: VCF_TABLE_FRAME_INPUT_PAGE,
-        inputPageNumber
+        inputPageNumber,
+        totalPageNumber
     }
 }
 export function VCFTableFrame_SinglePage(singlePageNumber:number):TableDisplay{
@@ -119,3 +122,9 @@ export function VCFTableFrame_SinglePage(singlePageNumber:number):TableDisplay{
         singlePageNumber
     }
 }
+// export function VCFTableFrame_TotalPage(totalPageNumber:number):TableDisplay{
+//     return{
+//         type: VCF_TABLE_FRAME_TOTAL_PAGE,
+//         totalPageNumber
+//     }
+// }
