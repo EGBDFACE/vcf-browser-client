@@ -258,6 +258,7 @@ export function funcUpload(InputFile:any){
         // chunkFile.emptyFileChunk = firstChunkMd5;
         // console.log(chunkFile.chunkNumber);
         // console.log(chunkFile);
+        // console.log(chunkTabDisplay);
         // let temp:string[][] = [];
         // if(chunkFile.chunkNumber === 0){
         //     for(var i=0;i<chunkFile.chunkFile.body.length;i++){

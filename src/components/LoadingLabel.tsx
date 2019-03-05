@@ -21,7 +21,8 @@ export default class LoadingLabel extends React.Component<Props,States>{
             width:20,
             height:20,
             antialias: true,
-            backgroundColor: 0xd3394c
+            backgroundColor: 0xd3394c,
+            resolution: 5
         });
         document.getElementById('loadingLabel').appendChild(app.view);
         // document.body.appendChild(app.view);

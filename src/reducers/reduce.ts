@@ -85,7 +85,7 @@ function fileUpload(state:fileUpload,action:UploadStatus){
                 }
             }
         case 'FILE_UPLOAD':
-            console.log(action.file);
+            // console.log(action.file);
             return {
                 ...state,
                 fileStatus: 'UPLOADING',

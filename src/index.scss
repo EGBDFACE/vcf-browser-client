@@ -148,3 +148,7 @@ body{
     @extend .fileUpload;
     // height: 300px;
 }
+#loadingLabel > canvas{
+    width: 20px;
+    height: 20px;
+}
