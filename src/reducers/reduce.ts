@@ -5,31 +5,8 @@ import { funcUpload } from './funcUpload';
 import { combineReducers } from 'redux';
 import { IgnorePlugin } from 'webpack';
 import { Table } from 'react-virtualized';
-// import store from '../store/store';
 
-// const initialState:StoreState = {
-//     enthusiasmLevel: 1,
-//     languageName: 'TypeScript',
-//     uploaded: false,
-//     uploading: false
-// };
-
-// const Reducer = (state :StoreState,action:any) => {
-//     console.log('get state');
-//     return {
-//         languageName: enthusiasm(state,action).languageName,
-//         enthusiasmLevel: enthusiasm(state,action).enthusiasmLevel,
-//         uploaded: uploadStatus(state,action).uploaded,
-//         uploading: uploadStatus(state,action).uploading,
-//         selectedFileName: uploadStatus(state,action).selectedFileName
-//     }
-// } 
-// const Reducer = combineReducers({
-//     enthusiasm,
-//     fileUpload
-// })
 const Reducer = (state:StoreState,action:any) => {
-    // console.log(state);
     return{
         enthusiasm: enthusiasm(state.enthusiasm,action),
         fileUpload: fileUpload(state.fileUpload,action),
@@ -37,8 +14,6 @@ const Reducer = (state:StoreState,action:any) => {
     }
 }
 function enthusiasm (state:enthusiasm,action:EnthusiasmAction){
-    // console.log(state);
-    // console.log(store.getState());
     switch(action.type){
         case 'INCREMENT_ENTHUSIASM':
             console.log('run increment');
@@ -57,17 +32,13 @@ function enthusiasm (state:enthusiasm,action:EnthusiasmAction){
     }
 }
 function fileUpload(state:fileUpload,action:UploadStatus){
-    // console.log(state)
     switch(action.type){
         case 'UPLOAD_STATUS_CHANGE':
             return {
                 ...state,
                 fileStatus: 'FILE_NOT_SELECTED'
-                // uploading: !state.uploading
             };
         case 'FILE_SELECTED':
-            // console.log('file selected');
-            // console.log(action.name);
             if(action.file){
                 return {
                     ...state,
@@ -77,7 +48,6 @@ function fileUpload(state:fileUpload,action:UploadStatus){
                     fileStatusStage: 'Start Upload',
                     chunkFile:[],
                     totalFile:[]
-                 //    uploading: !state.uploading 
                  }
             }else{
                 return {
@@ -85,7 +55,6 @@ function fileUpload(state:fileUpload,action:UploadStatus){
                 }
             }
         case 'FILE_UPLOAD':
-            // console.log(action.file);
             return {
                 ...state,
                 fileStatus: 'UPLOADING',
@@ -98,14 +67,10 @@ function fileUpload(state:fileUpload,action:UploadStatus){
                 fileStatusPercent: action.fileStatusPercent
             }
         case 'FILE_TABLE_DISPLAY':
-            // console.log(state.chunkFile);
-            // console.log(action.chunkList);
             return{
                 ...state,
                 totalFile: state.totalFile.concat(action.chunkList),
-                chunkFile: action.chunkList,
-                // totalFile: state.totalFile.concat(action.chunkTabList),
-                // chunkFile: action.chunkTabList
+                chunkFile: action.chunkList
             }
         default: return state;
     }
@@ -137,27 +102,7 @@ function tableDisplayVCF(state:tableFrameVCF,action:TableDisplay){
               currentPageNumber: Math.floor((state.currentPageNumber-1)*state.singlePageDisplayNumber/action.singlePageNumber+1),
               singlePageDisplayNumber: action.singlePageNumber
           }
-        // case 'VCF_TABLE_FRAME_TOTAL_PAGE':
-        //   console.log(state.singlePageDisplayNumber);
-        //   return{
-        //       ...state,
-        //       totalPageNumber: Math.ceil((state.totalPageNumber+action.totalPageNumber)/state.singlePageDisplayNumber)
-        //   }
         default : return state;
     }
 }
-
-// const Reducer = combineReducers({
-//     languageName:enthusiasm,
-//     enthusiasmLevel:enthusiasm,
-//     uploaded:uploadStatus,
-//     uploading:uploadStatus
-// });
-
-// export function Reducer(state:StoreState,action:EnthusiasmAction){
-//     return {
-//         enthusiasm: enthusiasm(state,action),
-//         uploadStatus: uploadStatus(state,action)
-//     }
-// }
 export default Reducer;
