@@ -5,7 +5,9 @@ export interface Props {
     enthusiasmLevel?:number;
     onIncrement?: ()=> void;
     onDecrement?: ()=> void;
+    nameadd: string;
 }
+interface States{}
 function getExclamationMarks(numChars:number){
     return Array(numChars+1).join('!');
 }
@@ -13,7 +15,18 @@ class Hello extends React.Component<Props,object>{
     constructor(props:Props){
         super(props);
     }
+    shouldComponentUpdate(nextProps:Props,nextState:States):boolean{
+        // for(let i = 0;)
+        console.log(this.props);
+        console.log('shouldComponentUpdate');
+        return true;
+    }
+    componentWillReceiveProps(){
+        console.log('componentWillReceiveProps');
+        console.log(this.props);
+    }
     render(){
+        console.log(this.props);
         const {name, enthusiasmLevel =1, onIncrement,onDecrement} = this.props;
         // console.log(this.props)
         if(enthusiasmLevel <= 0){
@@ -26,6 +39,7 @@ class Hello extends React.Component<Props,object>{
                     <button onClick = {onDecrement}>-</button>
                     <button onClick = {onIncrement}>+</button>
                 </div>
+                <div>{this.props.nameadd}</div>
             </div>
         )
     }
