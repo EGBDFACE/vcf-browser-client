@@ -35,6 +35,12 @@ export interface TableDisplay{
     singlePageNumber?: number;
     totalPageNumber?: number;
 }
+export interface VEPFileReceive{
+    type?: string,
+    data: string,
+    // chunkMd5: string,
+    fileMd5: string
+}
 
 const UPLOAD_STATUS_CHANGE = 'UPLOAD_STATUS_CHANGE';
 const INCREMENT_ENTHUSIASM = 'INCREMENT_ENTHUSIASM';
@@ -47,6 +53,7 @@ const VCF_TABLE_FRAME_PREVIOUS = 'VCF_TABLE_FRAME_PREVIOUS';
 const VCF_TABLE_FRAME_NEXT = 'VCF_TABLE_FRAME_NEXT';
 const VCF_TABLE_FRAME_INPUT_PAGE = 'VCF_TABLE_FRAME_INPUT_PAGE';
 const VCF_TABLE_FRAME_SINGLE_PAGE = 'VCF_TABLE_FRAME_SINGLE_PAGE';
+const VEP_RESULT_NOTPOSTED_CHANGE = 'VEP_RESULT_NOTPOSTED_CHANGE';
 // const VCF_TABLE_FRAME_TOTAL_PAGE = 'VCF_TABLE_FRAME_TOTAL_PAGE';
 
 export type EnthusiasmAction = IncrementEnthusiasm | DecrementEnthusiasm;
@@ -120,6 +127,14 @@ export function VCFTableFrame_SinglePage(singlePageNumber:number):TableDisplay{
     return{
         type: VCF_TABLE_FRAME_SINGLE_PAGE,
         singlePageNumber
+    }
+}
+export function VEPFileReceive(responseFile:VEPFileReceive):VEPFileReceive{
+    return{
+        type: VEP_RESULT_NOTPOSTED_CHANGE,
+        fileMd5: responseFile.fileMd5,
+        // chunkMd5: responseFile.chunkMd5,
+        data: responseFile.data
     }
 }
 // export function VCFTableFrame_TotalPage(totalPageNumber:number):TableDisplay{

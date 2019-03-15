@@ -1,6 +1,6 @@
-import { EnthusiasmAction,UploadStatus, TableDisplay } from '../actions/action';
+import { EnthusiasmAction,UploadStatus, TableDisplay, VEPFileReceive } from '../actions/action';
 // import {StoreState} from '../types/storeInterface';
-import { StoreState, enthusiasm, fileUpload,tableFrameVCF } from '../store/store';
+import { StoreState, enthusiasm, fileUpload,tableFrameVCF, fileReceive } from '../store/store';
 import { funcUpload } from './funcUpload';
 import { combineReducers } from 'redux';
 import { IgnorePlugin } from 'webpack';
@@ -10,7 +10,8 @@ const Reducer = (state:StoreState,action:any) => {
     return{
         enthusiasm: enthusiasm(state.enthusiasm,action),
         fileUpload: fileUpload(state.fileUpload,action),
-        tableFrameVCF: tableDisplayVCF(state.tableFrameVCF,action)
+        tableFrameVCF: tableDisplayVCF(state.tableFrameVCF,action),
+        fileReceive: fileReceiveFunc(state.fileReceive,action)
     }
 }
 function enthusiasm (state:enthusiasm,action:EnthusiasmAction){
@@ -55,10 +56,11 @@ function fileUpload(state:fileUpload,action:UploadStatus){
                 }
             }
         case 'FILE_UPLOAD':
+            funcUpload(action.file);
             return {
                 ...state,
                 fileStatus: 'UPLOADING',
-                fileFromServer: funcUpload(action.file)
+                // fileFromServer: funcUpload(action.file)
             }
         case 'FILE_UPLOAD_PROGRESS':
             return {
@@ -103,6 +105,24 @@ function tableDisplayVCF(state:tableFrameVCF,action:TableDisplay){
               singlePageDisplayNumber: action.singlePageNumber
           }
         default : return state;
+    }
+}
+function fileReceiveFunc(state:fileReceive,action:VEPFileReceive){
+    switch(action.type){
+        case 'VEP_RESULT_NOTPOSTED_CHANGE':
+            console.log('vep_result_notposted_change');
+            if(action.fileMd5 === state.fileMd5){
+                return{
+                    ...state,
+                    data: state.data.concat(action.data)
+                }
+            }else{
+                return{
+                    fileMd5: action.fileMd5,
+                    data: [].concat(action.data)
+                }
+            }
+        default: return state
     }
 }
 export default Reducer;

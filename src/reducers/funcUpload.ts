@@ -58,6 +58,7 @@ export function funcUpload(InputFile:any){
             }
         }
     };
+    // let vepResultFromServer:string[]= [];
     totalFileReader.readAsArrayBuffer(InputFile);
     totalFileReader.onload = function(e:any){
         let sparkTotal = new SparkMD5.ArrayBuffer();
@@ -177,9 +178,13 @@ export function funcUpload(InputFile:any){
                   if(response.data.chunksNumber == response.data.uploadedChunk.length){
                     store.dispatch(actions.FileUploadProgress(100,'Uploaded!'));
                     store.dispatch(actions.UploadStatusChange());
+                    // vepResultFromServer.push(response.data);
+                    // console.log(vepResultFromServer);
                   }else{
                     store.dispatch(actions.FileUploadProgress(Math.round((response.data.uploadedChunk.length/response.data.chunksNumber)*100),'Uploading...'));
+                    // vepResultFromServer.push(response.data);
                   }
+                  store.dispatch(actions.VEPFileReceive({data:response.data.data,fileMd5:response.data.fileMd5}));
               }).catch(error => {
                   console.log(error);
               })

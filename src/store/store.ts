@@ -19,7 +19,7 @@ export interface fileUpload{
     fileStatus: string,
     selectedFileName: any,
     inputFile: any,
-    fileFromServer: object,
+    // fileFromServer: string[],
     fileStatusPercent: number,
     fileStatusStage: string,
     chunkFile: string[][],
@@ -32,10 +32,16 @@ export interface tableFrameVCF{
     totalPageNumber: number,
     singlePageDisplayNumber:  number
 }
+export interface fileReceive{
+    fileMd5: string,
+    chunkMd5: string,
+    data: string[]
+}
 export interface StoreState{
     enthusiasm:enthusiasm,
     fileUpload:fileUpload,
-    tableFrameVCF: tableFrameVCF
+    tableFrameVCF: tableFrameVCF,
+    fileReceive: fileReceive
 }
 // const store = createStore<StoreState,any,any,any>(Reducer,{
 //     enthusiasmLevel: 1,
@@ -56,7 +62,7 @@ export const initialState:StoreState = {
         // fileStatus: 'UPLOADING',
         selectedFileName: 'Choose a file',
         inputFile: null,
-        fileFromServer: null,
+        // fileFromServer: null,
         fileStatusPercent: 0,
         fileStatusStage: 'Start Upload',
         // chunkFile: [],
@@ -67,6 +73,11 @@ export const initialState:StoreState = {
         currentPageNumber: 1,
         totalPageNumber: 0,
         singlePageDisplayNumber: 10
+    },
+    fileReceive: {
+        fileMd5: '',
+        chunkMd5: '',
+        data: []
     }
     // enthusiasmLevel: 1,
     // languageName: 'TypeScript',
