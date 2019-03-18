@@ -1,4 +1,5 @@
 import * as React from 'react';
+const drawDemo = require('../d3-SvgToWebgl/demo/chords');
 
 interface Props{
     data: string[],
@@ -9,6 +10,9 @@ interface States{}
 export default class ChartDisplay extends React.Component<Props,States>{
     constructor(props:Props){
         super(props);
+    }
+    componentDidMount(){
+        drawDemo();
     }
     render(){
         const { data,fileState } = this.props;

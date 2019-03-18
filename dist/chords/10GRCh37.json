@@ -1,0 +1,12 @@
+[
+ {"id":"chr1","label":"chr1","color":"#3247A6","stroke":"#FFFFFF","len":307041717},
+ {"id":"chr2","label":"chr2","color":"#3247A6","len":244442276},
+ {"id":"chr3","label":"chr3","color":"#3247A6","len":235667834},
+ {"id":"chr4","label":"chr4","color":"#3247A6","len":246994605},
+ {"id":"chr5","label":"chr5","color":"#3247A6","len":223902240},
+ {"id":"chr6","label":"chr6","color":"#3247A6","len":174033170},
+ {"id":"chr7","label":"chr7","color":"#3247A6","len":182381542},
+ {"id":"chr8","label":"chr8","color":"#3247A6","len":181122637},
+ {"id":"chr9","label":"chr9","color":"#3247A6","len":159769782},
+ {"id":"chr10","label":"chr10","color":"#3247A6","len":150982314}
+ ]

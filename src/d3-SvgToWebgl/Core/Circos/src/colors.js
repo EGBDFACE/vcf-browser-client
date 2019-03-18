@@ -30,6 +30,7 @@ import {
   interpolateYlOrBr,
   interpolateYlOrRd
 } from 'd3-scale-chromatic'
+// } from 'd3-scale'
 
 const palettes = {
   BrBG: interpolateBrBG,
