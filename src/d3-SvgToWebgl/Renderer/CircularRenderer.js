@@ -1,5 +1,5 @@
 import BaseRenderer from './BaseRenderer';
-import Circos from '../Core/Circos/src/circos';
+import Circos from '../Core/Circos/src/circos.js';
 const d3 = Object.assign({}, require('d3-queue'), require('d3-request'), require('d3-collection'), require('d3-array'));
 import defaultConfigs from '../Config';
 
@@ -11,7 +11,7 @@ export default class CircularRenderer extends BaseRenderer {
   chords(layout, data) {
     const width = this.renderer.view.width / this.renderer.resolution
     const height = this.renderer.view.height / this.renderer.resolution
-    const circos = new Circos({
+    const circos = Circos({
       container: this.renderer.view,
       renderer: this.renderer,
       width: width,
@@ -621,7 +621,7 @@ export default class CircularRenderer extends BaseRenderer {
   visShare(layout,data){
     const width = this.renderer.view.width / this.renderer.resolution
     const height = this.renderer.view.height / this.renderer.resolution
-    const circos = new Circos({
+    const circos =  Circos({
       container: this.renderer.view,
       renderer: this.renderer,
       width: width,
