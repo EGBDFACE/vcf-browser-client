@@ -5,7 +5,7 @@ import { Dispatch } from 'react';
 import ChartDisplay from '../components/ChartDisplay';
 
 function mapStateToProps(state:StoreState){
-    console.log(state);
+    // console.log(state);
     return{
         data: state.fileReceive.data,
         fileState: state.fileUpload.fileStatus

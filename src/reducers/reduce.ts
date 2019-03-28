@@ -114,12 +114,13 @@ function fileReceiveFunc(state:fileReceive,action:VEPFileReceive){
             if(action.fileMd5 === state.fileMd5){
                 return{
                     ...state,
-                    data: state.data.concat(action.data)
+                    // data: state.data.concat(action.data)
+                    data: JSON.stringify(JSON.parse(state.data).concat(JSON.parse(action.data)))
                 }
             }else{
                 return{
                     fileMd5: action.fileMd5,
-                    data: [].concat(action.data)
+                    data: action.data
                 }
             }
         default: return state

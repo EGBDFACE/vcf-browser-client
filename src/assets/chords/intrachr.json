@@ -1,0 +1,541 @@
+[{
+		"source": {
+			"id": "chr10",
+			"start": 4168612,
+			"end": 4169183
+		},
+		"target": {
+			"id": "chr10",
+			"start": 14033260,
+			"end": 14034564
+		}
+	},
+	{
+		"source": {
+			"id": "chr4",
+			"start": 5127692,
+			"end": 5127807
+		},
+		"target": {
+			"id": "chr4",
+			"start": 29963480,
+			"end": 29964183
+		}
+	},
+	{
+		"source": {
+			"id": "chr2",
+			"start": 62084123,
+			"end": 62089420
+		},
+		"target": {
+			"id": "chr2",
+			"start": 126666041,
+			"end": 126714382
+		}
+	},
+	{
+		"source": {
+			"id": "chr2",
+			"start": 98334995,
+			"end": 98335255
+		},
+		"target": {
+			"id": "chr2",
+			"start": 197885400,
+			"end": 197885826
+		}
+	},
+	{
+		"source": {
+			"id": "chr5",
+			"start": 5434509,
+			"end": 5434736
+		},
+		"target": {
+			"id": "chr5",
+			"start": 19817565,
+			"end": 19833466
+		}
+	},
+	{
+		"source": {
+			"id": "chr7",
+			"start": 18865541,
+			"end": 18866237
+		},
+		"target": {
+			"id": "chr7",
+			"start": 120206926,
+			"end": 120207340
+		}
+	},
+	{
+		"source": {
+			"id": "chr6",
+			"start": 10674456,
+			"end": 10674781
+		},
+		"target": {
+			"id": "chr6",
+			"start": 157563663,
+			"end": 157563932
+		}
+	},
+	{
+		"source": {
+			"id": "chr10",
+			"start": 6597015,
+			"end": 6597765
+		},
+		"target": {
+			"id": "chr10",
+			"start": 109506724,
+			"end": 109508231
+		}
+	},
+	{
+		"source": {
+			"id": "chr8",
+			"start": 124238883,
+			"end": 124238994
+		},
+		"target": {
+			"id": "chr8",
+			"start": 174875725,
+			"end": 174876539
+		}
+	},
+	{
+		"source": {
+			"id": "chr4",
+			"start": 5145313,
+			"end": 5145977
+		},
+		"target": {
+			"id": "chr4",
+			"start": 29951896,
+			"end": 29952662
+		}
+	},
+	{
+		"source": {
+			"id": "chr4",
+			"start": 5158382,
+			"end": 5158560
+		},
+		"target": {
+			"id": "chr4",
+			"start": 5540370,
+			"end": 5540783
+		}
+	},
+	{
+		"source": {
+			"id": "chr1",
+			"start": 34366783,
+			"end": 34367109
+		},
+		"target": {
+			"id": "chr1",
+			"start": 181895455,
+			"end": 181907672
+		}
+	},
+	{
+		"source": {
+			"id": "chr5",
+			"start": 14084340,
+			"end": 14084609
+		},
+		"target": {
+			"id": "chr5",
+			"start": 16063322,
+			"end": 16063806
+		}
+	},
+	{
+		"source": {
+			"id": "chr1",
+			"start": 42373948,
+			"end": 42375086
+		},
+		"target": {
+			"id": "chr1",
+			"start": 260399657,
+			"end": 260400007
+		}
+	},
+	{
+		"source": {
+			"id": "chr8",
+			"start": 119781619,
+			"end": 119782503
+		},
+		"target": {
+			"id": "chr8",
+			"start": 120141885,
+			"end": 120146457
+		}
+	},
+	{
+		"source": {
+			"id": "chr8",
+			"start": 23344279,
+			"end": 23344687
+		},
+		"target": {
+			"id": "chr8",
+			"start": 141131620,
+			"end": 141134358
+		}
+	},
+	{
+		"source": {
+			"id": "chr5",
+			"start": 74455014,
+			"end": 74455839
+		},
+		"target": {
+			"id": "chr5",
+			"start": 215869770,
+			"end": 215870069
+		}
+	},
+	{
+		"source": {
+			"id": "chr7",
+			"start": 18877383,
+			"end": 18878295
+		},
+		"target": {
+			"id": "chr7",
+			"start": 120207231,
+			"end": 120207466
+		}
+	},
+	{
+		"source": {
+			"id": "chr1",
+			"start": 48612382,
+			"end": 48612693
+		},
+		"target": {
+			"id": "chr1",
+			"start": 208340925,
+			"end": 208341435
+		}
+	},
+	{
+		"source": {
+			"id": "chr3",
+			"start": 86584327,
+			"end": 86584531
+		},
+		"target": {
+			"id": "chr3",
+			"start": 152865655,
+			"end": 152866224
+		}
+	},
+	{
+		"source": {
+			"id": "chr6",
+			"start": 11207485,
+			"end": 11207793
+		},
+		"target": {
+			"id": "chr6",
+			"start": 134491250,
+			"end": 134522145
+		}
+	},
+	{
+		"source": {
+			"id": "chr4",
+			"start": 5540304,
+			"end": 5540461
+		},
+		"target": {
+			"id": "chr4",
+			"start": 21335293,
+			"end": 21335958
+		}
+	},
+	{
+		"source": {
+			"id": "chr6",
+			"start": 6679675,
+			"end": 6679933
+		},
+		"target": {
+			"id": "chr6",
+			"start": 104281129,
+			"end": 104281615
+		}
+	},
+	{
+		"source": {
+			"id": "chr7",
+			"start": 18877383,
+			"end": 18878295
+		},
+		"target": {
+			"id": "chr7",
+			"start": 120206926,
+			"end": 120207340
+		}
+	},
+	{
+		"source": {
+			"id": "chr2",
+			"start": 16562737,
+			"end": 16563164
+		},
+		"target": {
+			"id": "chr2",
+			"start": 85452890,
+			"end": 85453185
+		}
+	},
+	{
+		"source": {
+			"id": "chr2",
+			"start": 32272925,
+			"end": 32273495
+		},
+		"target": {
+			"id": "chr2",
+			"start": 126252861,
+			"end": 126253207
+		}
+	},
+	{
+		"source": {
+			"id": "chr2",
+			"start": 48760283,
+			"end": 48762753
+		},
+		"target": {
+			"id": "chr2",
+			"start": 210705859,
+			"end": 210710570
+		}
+	},
+	{
+		"source": {
+			"id": "chr2",
+			"start": 85300073,
+			"end": 85304334
+		},
+		"target": {
+			"id": "chr2",
+			"start": 214430380,
+			"end": 214539577
+		}
+	},
+	{
+		"source": {
+			"id": "chr7",
+			"start": 165283108,
+			"end": 165283552
+		},
+		"target": {
+			"id": "chr7",
+			"start": 169230842,
+			"end": 169231697
+		}
+	},
+	{
+		"source": {
+			"id": "chr10",
+			"start": 5722838,
+			"end": 5731537
+		},
+		"target": {
+			"id": "chr10",
+			"start": 14033260,
+			"end": 14034564
+		}
+	},
+	{
+		"source": {
+			"id": "chr1",
+			"start": 173335591,
+			"end": 173336605
+		},
+		"target": {
+			"id": "chr1",
+			"start": 283239863,
+			"end": 283241269
+		}
+	},
+	{
+		"source": {
+			"id": "chr1",
+			"start": 42373948,
+			"end": 42375086
+		},
+		"target": {
+			"id": "chr1",
+			"start": 269102858,
+			"end": 269103545
+		}
+	},
+	{
+		"source": {
+			"id": "chr2",
+			"start": 6497467,
+			"end": 6497918
+		},
+		"target": {
+			"id": "chr2",
+			"start": 176889679,
+			"end": 176890115
+		}
+	},
+	{
+		"source": {
+			"id": "chr2",
+			"start": 66528248,
+			"end": 66530288
+		},
+		"target": {
+			"id": "chr2",
+			"start": 155412899,
+			"end": 155413405
+		}
+	},
+	{
+		"source": {
+			"id": "chr4",
+			"start": 14877148,
+			"end": 14877420
+		},
+		"target": {
+			"id": "chr4",
+			"start": 29678991,
+			"end": 29679370
+		}
+	},
+	{
+		"source": {
+			"id": "chr4",
+			"start": 163680834,
+			"end": 163681158
+		},
+		"target": {
+			"id": "chr4",
+			"start": 207682821,
+			"end": 207683211
+		}
+	},
+	{
+		"source": {
+			"id": "chr4",
+			"start": 5123057,
+			"end": 5123399
+		},
+		"target": {
+			"id": "chr4",
+			"start": 29951777,
+			"end": 29952229
+		}
+	},
+	{
+		"source": {
+			"id": "chr4",
+			"start": 67970910,
+			"end": 67975284
+		},
+		"target": {
+			"id": "chr4",
+			"start": 70642408,
+			"end": 70643307
+		}
+	},
+	{
+		"source": {
+			"id": "chr5",
+			"start": 138860095,
+			"end": 138860250
+		},
+		"target": {
+			"id": "chr5",
+			"start": 187014591,
+			"end": 187014904
+		}
+	},
+	{
+		"source": {
+			"id": "chr5",
+			"start": 20719104,
+			"end": 20719463
+		},
+		"target": {
+			"id": "chr6",
+			"start": 20388289,
+			"end": 20493638
+		}
+	},
+	{
+		"source": {
+			"id": "chr5",
+			"start": 59500405,
+			"end": 59501307
+		},
+		"target": {
+			"id": "chr5",
+			"start": 202628131,
+			"end": 202628326
+		}
+	},
+	{
+		"source": {
+			"id": "chr5",
+			"start": 66460475,
+			"end": 66466346
+		},
+		"target": {
+			"id": "chr5",
+			"start": 75679161,
+			"end": 75679597
+		}
+	},
+	{
+		"source": {
+			"id": "chr6",
+			"start": 10517476,
+			"end": 10517644
+		},
+		"target": {
+			"id": "chr6",
+			"start": 21940799,
+			"end": 21943808
+		}
+	},
+	{
+		"source": {
+			"id": "chr6",
+			"start": 90209197,
+			"end": 90211568
+		},
+		"target": {
+			"id": "chr6",
+			"start": 152231948,
+			"end": 152232507
+		}
+	},
+	{
+		"source": {
+			"id": "chr6",
+			"start": 99582341,
+			"end": 99582841
+		},
+		"target": {
+			"id": "chr6",
+			"start": 152229213,
+			"end": 152229450
+		}
+	}
+]

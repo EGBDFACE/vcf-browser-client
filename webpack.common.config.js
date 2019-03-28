@@ -1,4 +1,6 @@
 const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+
 module.exports = {
     mode: 'development',
     entry: './src/index.tsx',
@@ -27,6 +29,41 @@ module.exports = {
                 enforce:'pre',
                 test:/\.js$/,
                 loader:'source-map-loader'
+            },
+            {
+                test: /\.scss$/,
+                // include:[path.join(__dirname,'./../','src')],
+                use: [
+                    'style-loader',
+                    'css-loader',
+                    'sass-loader'
+                ]
+            },
+            {
+                test: /\.(png|jpg|gif)$/,
+                use: [{
+                    loader: 'url-loader',
+                    options: {
+                        limit: 8192
+                    }
+                }]
+            // }
+            },
+            {
+                test:/\.(txt)$/,
+                // test: /\.(json|txt)$/
+                use:[{
+                    loader: 'file-loader',
+                    options: {}
+                }]
+            }
+            ,
+            {
+                test: /\.json$/,
+                use: [{
+                    loader: 'file-loader'
+                }],
+                type: "javascript/auto"
             }
         ]
     },
@@ -35,5 +72,8 @@ module.exports = {
     //     'react-dom':'ReactDom'
     // },
     plugins:[
+        new HtmlWebpackPlugin({
+            template: '!!ejs-loader!./template.html'
+        })
     ]
 }

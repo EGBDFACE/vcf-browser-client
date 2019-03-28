@@ -1,6 +1,5 @@
 const webpack = require('webpack');
 const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
 // const HtmlWebpackPluginConfig = new HtmlWebpackPlugin({
 //     template:'!!ejs-loader!./template.html',
 // //     filename:'dist/index.html'
@@ -24,32 +23,7 @@ module.exports = merge(commonConfig,{
         hot: true,
         historyApiFallback: true
     },
-    module:{
-        rules:[
-            {
-                test: /\.scss$/,
-                // include:[path.join(__dirname,'./../','src')],
-                use: [
-                    'style-loader',
-                    'css-loader',
-                    'sass-loader'
-                ]
-            },
-            {
-                test: /\.(png|jpg|gif)$/,
-                use: [{
-                    loader: 'url-loader',
-                    options: {
-                        limit: 8192
-                    }
-                }]
-            }
-        ]
-    },
     plugins: [
         new webpack.HotModuleReplacementPlugin(),
-        new HtmlWebpackPlugin({
-            template: '!!ejs-loader!./template.html'
-        })
     ]
 })

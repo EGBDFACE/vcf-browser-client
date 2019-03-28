@@ -154,7 +154,7 @@ export function funcUpload(InputFile:any){
                     url:`http://222.20.79.250:8081/api/upload_file_part?fileMd5=${preloadedJSON.file.fileMd5}&chunkMd5=${chunkFile.chunkMd5}&chunkNumber=${chunkFile.chunkNumber}`,
                     data: chunkFile
                 }).then(response => {
-                    console.log(response.data);
+                    // console.log(response.data);
                     if(response.data.chunksNumber === response.data.uploadChunk.length){
                         store.dispatch(actions.FileUploadProgress(100,'Uploaded!'));
                         store.dispatch(actions.UploadStatusChange());
@@ -174,7 +174,13 @@ export function funcUpload(InputFile:any){
                   url:`http://222.20.79.250:8081/api/upload_file_part?fileMd5=${preloadedJSON.file.fileMd5}&chunkMd5=${chunkFile.chunkMd5}&chunkNumber=${chunkFile.chunkNumber}`,
                   data: chunkFile
               }).then(response => {
-                  console.log(response);
+                //   console.log(response);
+                //   console.log(JSON.parse(response.data.data));
+                //   JSON.parse(response.data.data).map((value:any)=>{
+                //     if(value.most_severe_consequence === 'missense_variant'){
+                //         console.log(value);
+                //     }
+                //   })
                   if(response.data.chunksNumber == response.data.uploadedChunk.length){
                     store.dispatch(actions.FileUploadProgress(100,'Uploaded!'));
                     store.dispatch(actions.UploadStatusChange());

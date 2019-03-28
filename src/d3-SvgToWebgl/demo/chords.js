@@ -22,7 +22,7 @@ export default function drawDemo(){
 			labelSpacing: 10
 		}
 	}, [{
-		circularType: 'heatmap',
+		circularType: 'highlight',
 		name: 'CpG',
 		fileUrl: '/dist/chords/CpG.v3.bed',
 		fileType: 'tsv',

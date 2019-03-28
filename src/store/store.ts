@@ -35,7 +35,7 @@ export interface tableFrameVCF{
 export interface fileReceive{
     fileMd5: string,
     chunkMd5: string,
-    data: string[]
+    data: string
 }
 export interface StoreState{
     enthusiasm:enthusiasm,
@@ -77,7 +77,7 @@ export const initialState:StoreState = {
     fileReceive: {
         fileMd5: '',
         chunkMd5: '',
-        data: []
+        data: ''
     }
     // enthusiasmLevel: 1,
     // languageName: 'TypeScript',
