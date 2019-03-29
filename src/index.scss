@@ -29,7 +29,7 @@ body{
     padding: 6.25em 1.25em;
     max-width: 900px;
     margin: 20px auto;
-    background-color: $iFile-bg-color;
+    // background-color: $iFile-bg-color;
     border-radius: 4px;
 }
 
@@ -144,9 +144,15 @@ body{
     padding-left: 5px;
     color: $content-color;
 }
-.TableDisplay,.chartDisplay{
+.TableDisplay{
     @extend .fileUpload;
     // height: 300px;
+}
+.chartDisplay{
+    @extend .fileUpload;
+    // max-width: 900px;
+    max-width: 100%;
+    overflow: hidden;
 }
 #loadingLabel > canvas{
     width: 20px;
