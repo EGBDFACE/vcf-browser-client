@@ -81,6 +81,8 @@ function getColor(node, value, opacity) {
 }
 
 function color2hex(color) {
+	// console.log(color);
+	// console.log(d3Color.color(color));
 	return rgb2hex(d3Color.color(color).rgb().toString());
 
 	function rgb2hex(rgb) {

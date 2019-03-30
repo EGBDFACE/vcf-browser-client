@@ -87,43 +87,72 @@ class VEPCircularRender extends BaseRenderer{
                 }
             });
 
-            let sortVepResult = vepResult.sort(compare);
+            // let VepResult = vepResult.sort(compare);
             
             d3.tsv(Gene_GRCh38,d=>{
-                d.sort(compare);
+                // d.sort(compare);
                 console.log(d);
-    
-                for(let i=0;i<d.length;i++){
-                    for(let j=0;j<sortVepResult.length;j++){
-                        // if((d[i].txStart)&&(d[i].txEnd)&&(sortVepResult[j].start)&&(sortVepResult[j].end)){
-                        if((d[i].txStart <= sortVepResult[j].start)&&(d[i].txEnd >= sortVepResult[j].end)){
-                            highlightData.push({
-                                block_id: d[i].chrom,
-                                start: d[i].txStart,
-                                end: d[i].txEnd,
-                                value: 0
-                            });
+                // console.log(VepResult);
+                for(let i=0;i<vepResult.length;i++){
+                    for(let j=0;j<d.length;j++){
+                        if((d[j].chrom === 'chr'+vepResult[i].seq_region_name)&&(parseInt(d[j].txStart)<= vepResult[i].start)&&(parseInt(d[j].txEnd) >= vepResult[i].end)){
+                            if((JSON.stringify(highlightData).indexOf(d[j].name)) === -1){
+                                highlightData.push({
+                                    block_id: d[j].chrom,
+                                    start: parseInt(d[j].txStart),
+                                    preserve_start: parseInt(d[j].txStart),
+                                    preserve_end: parseInt(d[j].txEnd),
+                                    end: parseInt(d[j].txEnd),
+                                    value: 0.1,
+                                    name: d[j].name
+                                });
+                                break;
+                            }
                         }
-                        if(d[i].txStart > sortVepResult[j].start){break;}
-                        // }
                     }
                 }
+                // for(let i=0;i<d.length;i++){
+                //     for(let j=0;j<sortVepResult.length;j++){
+                //         // if((d[i].txStart)&&(d[i].txEnd)&&(sortVepResult[j].start)&&(sortVepResult[j].end)){
+                //         if((parseInt(d[i].txStart) <= sortVepResult[j].start)&&(parseInt(d[i].txEnd) >= sortVepResult[j].end)){
+                //             // console.log(d[i].txStart);
+                //             // console.log(parseInt(d[i].txStart));
+                //             // console.log(d[i].txEnd);
+                //             // console.log(parseInt(d[i].txEnd));
+                //             if(JSON.stringify(highlightData).indexOf(d[i].name) === -1){
+                //                 highlightData.push({
+                //                     block_id: d[i].chrom,
+                //                     start: parseInt(d[i].txStart),
+                //                     end: parseInt(d[i].txEnd),
+                //                     value: 0.1,
+                //                     name: d[i].name
+                //                 });
+                //             }
+                //         }
+                //         if(parseInt(d[i].txStart) > sortVepResult[j].start){break;}
+                //         // }
+                //     }
+                // }
+                // let preserve_highlight_data = JSON.parse(JSON.stringify(highlightData));
+                // console.log(preserve_highlight_data);
+                // console.log(highlightData);
 
                 circular = circular.highlight('Gene',highlightData,{
-                    innerRadius: 300,
-                    outerRadius: 320,
+                    innerRadius: 360,
+                    outerRadius: 380,
                     opacity: 0.6,
-                    color: '#000',
+                    color: '#4b0f31',
                     tooltipContent: function(d){
+                        // console.log(d);
                         return[{
                            title: 'Chrom',
-                           value: d.chrom 
+                           value: d.block_id 
                         },{
                             title: 'start',
-                            value: d.txStart
+                            value: d.preserve_start
                         },{
                             title: 'end',
-                            value: d.txEnd
+                            value: d.preserve_end
                         }]
                     }
                 });
@@ -144,6 +173,7 @@ class VEPCircularRender extends BaseRenderer{
                     max: 0.1,
                     color: '#000',
                     tooltipContent: function(d){
+                        console.log(d);
                         if(d.start != d.end){
                             return{
                                 title: 'snv'
@@ -158,23 +188,31 @@ class VEPCircularRender extends BaseRenderer{
             
                 let MetaLRData = [],MetaSVMData = [];
 
+                console.log(vepResult);
                 for(let i=0;i<vepResult.length;i++){
-                    if(vepResult[i].transcript_consequence){
+                    if(vepResult[i].transcript_consequences){
+                        // console.log(JSON.stringify(vepResult[i].transcript_consequences))
+                        let tempCommonObj ={
+                            block_id: 'chr' + vepResult[i].seq_region_name,
+                            start: vepResult[i].start,
+                            end: vepResult[i].end,
+                            position: parseInt((vepResult[i].start+vepResult[i].end)/2)
+                        };
                         if(JSON.stringify(vepResult[i].transcript_consequences).indexOf('metalr_rankscore') != -1){
-                            let tempCommonObj ={
-                                block_id: 'chr' + vepResult[i].seq_region_name,
-                                start: vepResult[i].start,
-                                end: vepResult[i].end,
-                                position: parseInt((vepResult[i].start+vepResult[i].end)/2)
-                            };
                             let temp_MetaLR_rankscore = 0, temp_MetaSVM_rankscore = 0;
-                            for(let j=0;j<vepResult[i].transcript_consequence.length;j++){
-                                if(vepResult[i].transcript_consequence[j].metalr_score){
-                                    temp_MetaLR_rankscore = vepResult[i].transcript_consequence[j].metalr_rankscore;
-                                    temp_MetaSVM_rankscore = vepResult[i].transcript_consequence[j].metasvm_rankscore;
+                            for(let j=0;j<vepResult[i].transcript_consequences.length;j++){
+                                if(vepResult[i].transcript_consequences[j].metalr_score){
+                                    temp_MetaLR_rankscore = vepResult[i].transcript_consequences[j].metalr_rankscore;
+                                    temp_MetaSVM_rankscore = vepResult[i].transcript_consequences[j].metasvm_rankscore;
                                     break;
                                 }
                             }
+                            // console.log(tempCommonObj);
+                            // console.log({
+                            //     ...tempCommonObj,
+                            //     metalr_rankscore: temp_MetaLR_rankscore,
+                            //     metasvm_rankscore: temp_MetaSVM_rankscore
+                            // });
                             MetaLRData.push({
                                 ...tempCommonObj,
                                 value: temp_MetaLR_rankscore
@@ -183,9 +221,17 @@ class VEPCircularRender extends BaseRenderer{
                                 ...tempCommonObj,
                                 value: temp_MetaSVM_rankscore
                             });
+                        }else{
+                            MetaSVMData.push({
+                                ...tempCommonObj,
+                                value: 0
+                            })
                         }
                     }
                 }
+                
+                console.log(MetaLRData);
+                console.log(MetaSVMData);
 
                 circular = circular.scatter('MetaLR_rankscore',MetaLRData,{
                     innerRadius: 0.49 / 0.95,
@@ -204,10 +250,15 @@ class VEPCircularRender extends BaseRenderer{
                     //     }
                     // },
                     color: function(d){
+                        // console.log(d);
                         if(d.value > 0.9436){ return '#f44336';}
                         else { return '#3f51b5';}
                     },
-                    strokeColor: '#3247A6',
+                    strokeColor: function(d){
+                        // console.log(d);
+                        if(d.value > 0.9436){ return '#f44336';}
+                        else { return '#3f51b5';}
+                    },
                     strokeWidth: 0.5,
                     fillOpacity: 1,
                     shape: 'circle',
@@ -251,11 +302,10 @@ class VEPCircularRender extends BaseRenderer{
                 circular = circular.heatmap('MetaSVM_rankscore',MetaSVMData,{
                     innerRadius: 0.1 / 0.95,
                     outerRadius: 0.45 / 0.95,
+                    logScale: false,
                     color: function(d,min,max){
-                        return scaleQuantize()
-                            .domain([min,max])
-                            .range(['0000FF','#4169E1','#7B68EE','#6495ED','#1E90FF','#00BFFF','#87CEFA','#87CEEB','#ADD8E6','#B0E0E6','#FFA07A','#FA8072','#E9967A','#CD5C5C','#DC143C','#FF0000'])(d.value)
-                    },
+                        return scaleQuantize().domain([min,max]).range(['#0000FF','#4169E1','#7B68EE','#6495ED','#1E90FF','#00BFFF','#87CEFA','#87CEEB','#ADD8E6','#B0E0E6','#FFA07A','#FA8072','#E9967A','#CD5C5C','#DC143C','#FF0000'])(d.value)
+                    } || 'YlOrRd',
                     tooltipContent: function(d){
                         return[{
                             title: 'Chrom',
@@ -272,13 +322,14 @@ class VEPCircularRender extends BaseRenderer{
 
         });
         
-        console.log(layoutData);
 
         var compare = function(obj1,obj2){
-            var value1 = obj1.start || obj1.txStart;
-            var value2 = obj2.start || obj2.txStart;
+            var value1 = obj1.start || parseInt(obj1.txStart);
+            var value2 = obj2.start || parseInt(obj2.txStart);
             return value1>value2?1:(value1 < value2?-1:0);
         }
+    }
+}
         
         // console.log(vepResult);
 
@@ -517,8 +568,7 @@ class VEPCircularRender extends BaseRenderer{
 
         // circular.render();
         
-    }
-}
+  
 
 // function compare(property){
 //     return function(obj1,obj2){
