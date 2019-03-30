@@ -7,7 +7,7 @@ import { scaleQuantize } from 'd3';
 // import Gene_GRCh38 from '../../assets/vep/geno_position_GRCh38.txt';
 
 const GRCh38_JSON = require('../../assets/vep/10GRCh38.json');
-const Gene_GRCh38 = require('../../assets/vep/geno_position_GRCh38.txt');
+const Gene_GRCh37 = require('../../assets/vep/geno_position_GRCh37.txt');
 
 export default function drawVepResultDiagram(data){
     var canvas = document.getElementsByTagName('canvas')[0];
@@ -88,29 +88,87 @@ class VEPCircularRender extends BaseRenderer{
             });
 
             // let VepResult = vepResult.sort(compare);
-            
-            d3.tsv(Gene_GRCh38,d=>{
+            let geno_data = {};
+            d3.tsv(Gene_GRCh37,d=>{
                 // d.sort(compare);
-                console.log(d);
+                // console.log(d);
                 // console.log(VepResult);
+                for(let i=0;i<d.length;i++){
+                    if(!geno_data[d[i].chrom]){
+                        geno_data[d[i].chrom] = [];
+                        geno_data[d[i].chrom].push(d[i]);
+                    }else{
+                        geno_data[d[i].chrom].push(d[i]);
+                    }
+                }
+                console.log(geno_data);
                 for(let i=0;i<vepResult.length;i++){
-                    for(let j=0;j<d.length;j++){
-                        if((d[j].chrom === 'chr'+vepResult[i].seq_region_name)&&(parseInt(d[j].txStart)<= vepResult[i].start)&&(parseInt(d[j].txEnd) >= vepResult[i].end)){
-                            if((JSON.stringify(highlightData).indexOf(d[j].name)) === -1){
+                    let chromTemp = 'chr'+vepResult[i].seq_region_name;
+                    // console.log(chromTemp);
+                    // console.log(geno_data[chromTemp]);
+                    for(let j=0;j<geno_data[chromTemp].length;j++){
+                        if((parseInt(geno_data[chromTemp][j].txStart) <= vepResult[i].start)&&(parseInt(geno_data[chromTemp][j].txEnd) >= vepResult[i].end)){
+                            console.log('prepare_to_push');
+                            if(JSON.stringify(highlightData).indexOf(geno_data[chromTemp][j].name) === -1){
+                                console.log('push');
                                 highlightData.push({
-                                    block_id: d[j].chrom,
-                                    start: parseInt(d[j].txStart),
-                                    preserve_start: parseInt(d[j].txStart),
-                                    preserve_end: parseInt(d[j].txEnd),
-                                    end: parseInt(d[j].txEnd),
+                                    block_id: geno_data[chromTemp][j].chrom,
+                                    start: parseInt(geno_data[chromTemp][j].txStart),
+                                    preserve_start: parseInt(geno_data[chromTemp][j].txStart),
+                                    end: parseInt(geno_data[chromTemp][j].txEnd),
+                                    preserve_end: parseInt(geno_data[chromTemp][j].txEnd),
                                     value: 0.1,
-                                    name: d[j].name
+                                    name: geno_data[chromTemp][j].name
                                 });
                                 break;
                             }
                         }
                     }
                 }
+                console.log(highlightData);
+                // console.log(geno_data);
+                // let temp = 0;
+                // Object.keys(geno_data).forEach(function(key){
+                //     console.log(geno_data[key]);
+                //     temp+= geno_data[key].length;
+                // });
+                // console.log(temp);
+                // for(let i=0;i<vepResult.length;i++){
+                    // for(let j=0;j<d.length;j++){
+                    //     if((d[j].chrom === 'chr'+vepResult[i].seq_region_name)){
+                    //         if(parseInt(d[j].txStart) <= vepResult[i].start){
+                    //             if(parseInt(d[j].txEnd) >= vepResult[i].end){
+                    //                 if(JSON.stringify(highlightData).indexOf(d[j].name) === -1){
+                    //                     highlightData.push({
+                    //                         block_id: d[j].chrom,
+                    //                         start: parseInt(d[j].txStart),
+                    //                         preserve_start: parseInt(d[j].txStart),
+                    //                         preserve_end: parseInt(d[j].txEnd),
+                    //                         end: parseInt(d[j].txEnd),
+                    //                         value: 0.1,
+                    //                         name: d[j].name
+                    //                     });
+                    //                     break;
+                    //                 }
+                    //             }
+                    //         }
+                    //     }
+                        // if((d[j].chrom === 'chr'+vepResult[i].seq_region_name)&&(parseInt(d[j].txStart)<= vepResult[i].start)&&(parseInt(d[j].txEnd) >= vepResult[i].end)){
+                        //     if((JSON.stringify(highlightData).indexOf(d[j].name)) === -1){
+                        //         highlightData.push({
+                        //             block_id: d[j].chrom,
+                        //             start: parseInt(d[j].txStart),
+                        //             preserve_start: parseInt(d[j].txStart),
+                        //             preserve_end: parseInt(d[j].txEnd),
+                        //             end: parseInt(d[j].txEnd),
+                        //             value: 0.1,
+                        //             name: d[j].name
+                        //         });
+                        //         break;
+                        //     }
+                        // }
+                    // }
+                // }
                 // for(let i=0;i<d.length;i++){
                 //     for(let j=0;j<sortVepResult.length;j++){
                 //         // if((d[i].txStart)&&(d[i].txEnd)&&(sortVepResult[j].start)&&(sortVepResult[j].end)){
@@ -221,10 +279,15 @@ class VEPCircularRender extends BaseRenderer{
                                 ...tempCommonObj,
                                 value: temp_MetaSVM_rankscore
                             });
-                        }else{
+                        }
+                        else{
+                            MetaLRData.push({
+                                ...tempCommonObj,
+                                value: 0.9634
+                            })
                             MetaSVMData.push({
                                 ...tempCommonObj,
-                                value: 0
+                                value: 0.97213
                             })
                         }
                     }
@@ -251,12 +314,12 @@ class VEPCircularRender extends BaseRenderer{
                     // },
                     color: function(d){
                         // console.log(d);
-                        if(d.value > 0.9436){ return '#f44336';}
+                        if(d.value > 0.9634){ return '#f44336';}
                         else { return '#3f51b5';}
                     },
                     strokeColor: function(d){
                         // console.log(d);
-                        if(d.value > 0.9436){ return '#f44336';}
+                        if(d.value > 0.9634){ return '#f44336';}
                         else { return '#3f51b5';}
                     },
                     strokeWidth: 0.5,
@@ -288,7 +351,7 @@ class VEPCircularRender extends BaseRenderer{
                         opacity: 0.06
                     }],
                     tooltipContent: function(d){
-                        console.log(d);
+                        // console.log(d);
                         return[{
                             title: 'Chrom',
                             value: d.block_id
