@@ -501,8 +501,13 @@ var mouseEvents = {
 };
 
 function canvasListener(event) {
-	var context = this.getContext('webgl'),
-		root = context._rootElement;
+	var canvas = document.getElementsByTagName('canvas')[0];
+	var context = canvas.getContext('webgl');
+	// var context = this.getContext('webgl'),
+	var	root = context._rootElement;
+	console.log(canvas);
+	console.log(context);
+	console.log(root);
 	// set refresh to true
 	root.refresh = true;
 	if (!root) return;

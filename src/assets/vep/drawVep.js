@@ -3,28 +3,42 @@ import Circos from '../../d3-SvgToWebgl/Core/Circos/src/circos.js';
 const d3 = Object.assign({},require('d3-queue'),require('d3-request'),require('d3-array'));
 import defaultConfigs from '../../d3-SvgToWebgl/Config';
 import { scaleQuantize } from 'd3';
-// import GRCh38_JSON from '../../assets/vep/10GRCh38.json';
-// import Gene_GRCh38 from '../../assets/vep/geno_position_GRCh38.txt';
 
-const GRCh38_JSON = require('../../assets/vep/10GRCh38.json');
-const Gene_GRCh37 = require('../../assets/vep/geno_position_GRCh37.txt');
+import * as vepData from './vepData.js';
 
-export default function drawVepResultDiagram(data){
+export default function drawVepResultDiagram(){
+    // console.log(vepData.all_variant_chrom);
+    // console.log(vepData.highlight_data);
+    // console.log(vepData.layout_data);
+    // console.log(vepData.variant_data);
+    // console.log(vepData.geno_data);
+    // console.log(vepData.metalr_rankscore_data);
+    // console.log(vepData.metasvm_rankscore_data);
     var canvas = document.getElementsByTagName('canvas')[0];
     canvas.width = document.body.clientWidth;
     canvas.height = document.body.clientHeight;
+    // vepData.get_all_variant_chrom(JSON.parse(data));
+    // vepData.get_layout_data();
+    // vepData.get_variant_data(JSON.parse(data));
+    // vepData.get_meta_data(JSON.parse(data));
+    // console.log(vepData.all_variant_chrom);
+    // console.log(vepData.geno_data);
+    // console.log(vepData.highlight_data);
+    // console.log(vepData.layout_data);
+    // console.log(vepData.metalr_rankscore_data);
+    // console.log(vepData.metasvm_rankscore_data);
     new VEPCircularRender(document.getElementsByTagName('canvas')[0],{
         // bgColor: 0xF4F4F4
         // bgColor: 0xdfc8ca
         bgColor: 0xf1e5e6
-    }).drawVEP(JSON.parse(data));
+    }).drawVEP();
 }
-
+ 
 class VEPCircularRender extends BaseRenderer{
     constructor(elem,options){
         super(elem,options);
     }
-    drawVEP(vepResult){
+    drawVEP(){
         const width = this.renderer.view.width/this.renderer.resolution;
         const height = this.renderer.view.height/this.renderer.resolution;
         // console.log(this.renderer.view.width);
@@ -39,32 +53,32 @@ class VEPCircularRender extends BaseRenderer{
         
         const gieStainColor = defaultConfigs.circular.gieStainColor;
         
-        let layoutData = [],
-            highlightData = [],
-            all_variant_chrom = [];
+        // let layoutData = [],
+        //     highlightData = [],
+        //     all_variant_chrom = [];
 
-        for(let i =0;i<vepResult.length;i++){
-            if(!all_variant_chrom.length){
-                all_variant_chrom.push(vepResult[i].seq_region_name);
-            }else{
-                if(all_variant_chrom.indexOf(vepResult[i].seq_region_name) === -1){
-                    all_variant_chrom.push(vepResult[i].seq_region_name);
-                }
-            }
-        }
+        // for(let i =0;i<vepResult.length;i++){
+        //     if(!all_variant_chrom.length){
+        //         all_variant_chrom.push(vepResult[i].seq_region_name);
+        //     }else{
+        //         if(all_variant_chrom.indexOf(vepResult[i].seq_region_name) === -1){
+        //             all_variant_chrom.push(vepResult[i].seq_region_name);
+        //         }
+        //     }
+        // }
         
-        console.log(all_variant_chrom);
+        // console.log(all_variant_chrom);
 
-        d3.json(GRCh38_JSON,d=>{
-            layoutData = d.filter(value=>{
-                for(let i=0;i<all_variant_chrom.length;i++){
-                    if(value.id === 'chr'+all_variant_chrom[i]){
-                        return value
-                    }
-                }
-            })
+        // d3.json(GRCh38_JSON,d=>{
+        //     layoutData = d.filter(value=>{
+        //         for(let i=0;i<all_variant_chrom.length;i++){
+        //             if(value.id === 'chr'+all_variant_chrom[i]){
+        //                 return value
+        //             }
+        //         }
+        //     })
 
-            var circular = circos.layout(layoutData,{
+            var circular = circos.layout(vepData.layout_data,{
                 innerRadius: 400,
                 outerRadius: 420,
                 labels: {
@@ -88,44 +102,44 @@ class VEPCircularRender extends BaseRenderer{
             });
 
             // let VepResult = vepResult.sort(compare);
-            let geno_data = {};
-            d3.tsv(Gene_GRCh37,d=>{
-                // d.sort(compare);
-                // console.log(d);
-                // console.log(VepResult);
-                for(let i=0;i<d.length;i++){
-                    if(!geno_data[d[i].chrom]){
-                        geno_data[d[i].chrom] = [];
-                        geno_data[d[i].chrom].push(d[i]);
-                    }else{
-                        geno_data[d[i].chrom].push(d[i]);
-                    }
-                }
-                console.log(geno_data);
-                for(let i=0;i<vepResult.length;i++){
-                    let chromTemp = 'chr'+vepResult[i].seq_region_name;
-                    // console.log(chromTemp);
-                    // console.log(geno_data[chromTemp]);
-                    for(let j=0;j<geno_data[chromTemp].length;j++){
-                        if((parseInt(geno_data[chromTemp][j].txStart) <= vepResult[i].start)&&(parseInt(geno_data[chromTemp][j].txEnd) >= vepResult[i].end)){
-                            console.log('prepare_to_push');
-                            if(JSON.stringify(highlightData).indexOf(geno_data[chromTemp][j].name) === -1){
-                                console.log('push');
-                                highlightData.push({
-                                    block_id: geno_data[chromTemp][j].chrom,
-                                    start: parseInt(geno_data[chromTemp][j].txStart),
-                                    preserve_start: parseInt(geno_data[chromTemp][j].txStart),
-                                    end: parseInt(geno_data[chromTemp][j].txEnd),
-                                    preserve_end: parseInt(geno_data[chromTemp][j].txEnd),
-                                    value: 0.1,
-                                    name: geno_data[chromTemp][j].name
-                                });
-                                break;
-                            }
-                        }
-                    }
-                }
-                console.log(highlightData);
+            // let geno_data = {};
+            // d3.tsv(Gene_GRCh37,d=>{
+            //     // d.sort(compare);
+            //     // console.log(d);
+            //     // console.log(VepResult);
+            //     for(let i=0;i<d.length;i++){
+            //         if(!geno_data[d[i].chrom]){
+            //             geno_data[d[i].chrom] = [];
+            //             geno_data[d[i].chrom].push(d[i]);
+            //         }else{
+            //             geno_data[d[i].chrom].push(d[i]);
+            //         }
+            //     }
+            //     console.log(geno_data);
+            //     for(let i=0;i<vepResult.length;i++){
+            //         let chromTemp = 'chr'+vepResult[i].seq_region_name;
+            //         // console.log(chromTemp);
+            //         // console.log(geno_data[chromTemp]);
+            //         for(let j=0;j<geno_data[chromTemp].length;j++){
+            //             if((parseInt(geno_data[chromTemp][j].txStart) <= vepResult[i].start)&&(parseInt(geno_data[chromTemp][j].txEnd) >= vepResult[i].end)){
+            //                 // console.log('prepare_to_push');
+            //                 if(JSON.stringify(highlightData).indexOf(geno_data[chromTemp][j].name) === -1){
+            //                     // console.log('push');
+            //                     highlightData.push({
+            //                         block_id: geno_data[chromTemp][j].chrom,
+            //                         start: parseInt(geno_data[chromTemp][j].txStart),
+            //                         preserve_start: parseInt(geno_data[chromTemp][j].txStart),
+            //                         end: parseInt(geno_data[chromTemp][j].txEnd),
+            //                         preserve_end: parseInt(geno_data[chromTemp][j].txEnd),
+            //                         value: 0.1,
+            //                         name: geno_data[chromTemp][j].name
+            //                     });
+            //                     break;
+            //                 }
+            //             }
+            //         }
+            //     }
+            //     console.log(highlightData);
                 // console.log(geno_data);
                 // let temp = 0;
                 // Object.keys(geno_data).forEach(function(key){
@@ -195,7 +209,7 @@ class VEPCircularRender extends BaseRenderer{
                 // console.log(preserve_highlight_data);
                 // console.log(highlightData);
 
-                circular = circular.highlight('Gene',highlightData,{
+                circular = circular.highlight('Gene',vepData.highlight_data,{
                     innerRadius: 360,
                     outerRadius: 380,
                     opacity: 0.6,
@@ -215,15 +229,7 @@ class VEPCircularRender extends BaseRenderer{
                     }
                 });
 
-                circular = circular.line('variant',vepResult.map(value=>{
-                    return{
-                        block_id: 'chr'+value.seq_region_name,
-                        start: value.start,
-                        end: value.end,
-                        position: value.start,
-                        value: 0.01
-                    }
-                }),{
+                circular = circular.line('variant',vepData.variant_data,{
                     innerRadius: 0.77 / 0.95,
                     outerRadius: 0.9 / 0.95,
                     maxSpace: 1000000,
@@ -244,59 +250,59 @@ class VEPCircularRender extends BaseRenderer{
                     }
                 })
             
-                let MetaLRData = [],MetaSVMData = [];
+                // let MetaLRData = [],MetaSVMData = [];
 
-                console.log(vepResult);
-                for(let i=0;i<vepResult.length;i++){
-                    if(vepResult[i].transcript_consequences){
-                        // console.log(JSON.stringify(vepResult[i].transcript_consequences))
-                        let tempCommonObj ={
-                            block_id: 'chr' + vepResult[i].seq_region_name,
-                            start: vepResult[i].start,
-                            end: vepResult[i].end,
-                            position: parseInt((vepResult[i].start+vepResult[i].end)/2)
-                        };
-                        if(JSON.stringify(vepResult[i].transcript_consequences).indexOf('metalr_rankscore') != -1){
-                            let temp_MetaLR_rankscore = 0, temp_MetaSVM_rankscore = 0;
-                            for(let j=0;j<vepResult[i].transcript_consequences.length;j++){
-                                if(vepResult[i].transcript_consequences[j].metalr_score){
-                                    temp_MetaLR_rankscore = vepResult[i].transcript_consequences[j].metalr_rankscore;
-                                    temp_MetaSVM_rankscore = vepResult[i].transcript_consequences[j].metasvm_rankscore;
-                                    break;
-                                }
-                            }
-                            // console.log(tempCommonObj);
-                            // console.log({
-                            //     ...tempCommonObj,
-                            //     metalr_rankscore: temp_MetaLR_rankscore,
-                            //     metasvm_rankscore: temp_MetaSVM_rankscore
-                            // });
-                            MetaLRData.push({
-                                ...tempCommonObj,
-                                value: temp_MetaLR_rankscore
-                            });
-                            MetaSVMData.push({
-                                ...tempCommonObj,
-                                value: temp_MetaSVM_rankscore
-                            });
-                        }
-                        else{
-                            MetaLRData.push({
-                                ...tempCommonObj,
-                                value: 0.9634
-                            })
-                            MetaSVMData.push({
-                                ...tempCommonObj,
-                                value: 0.97213
-                            })
-                        }
-                    }
-                }
+                // console.log(vepResult);
+                // for(let i=0;i<vepResult.length;i++){
+                //     if(vepResult[i].transcript_consequences){
+                //         // console.log(JSON.stringify(vepResult[i].transcript_consequences))
+                //         let tempCommonObj ={
+                //             block_id: 'chr' + vepResult[i].seq_region_name,
+                //             start: vepResult[i].start,
+                //             end: vepResult[i].end,
+                //             position: parseInt((vepResult[i].start+vepResult[i].end)/2)
+                //         };
+                //         if(JSON.stringify(vepResult[i].transcript_consequences).indexOf('metalr_rankscore') != -1){
+                //             let temp_MetaLR_rankscore = 0, temp_MetaSVM_rankscore = 0;
+                //             for(let j=0;j<vepResult[i].transcript_consequences.length;j++){
+                //                 if(vepResult[i].transcript_consequences[j].metalr_score){
+                //                     temp_MetaLR_rankscore = vepResult[i].transcript_consequences[j].metalr_rankscore;
+                //                     temp_MetaSVM_rankscore = vepResult[i].transcript_consequences[j].metasvm_rankscore;
+                //                     break;
+                //                 }
+                //             }
+                //             // console.log(tempCommonObj);
+                //             // console.log({
+                //             //     ...tempCommonObj,
+                //             //     metalr_rankscore: temp_MetaLR_rankscore,
+                //             //     metasvm_rankscore: temp_MetaSVM_rankscore
+                //             // });
+                //             MetaLRData.push({
+                //                 ...tempCommonObj,
+                //                 value: temp_MetaLR_rankscore
+                //             });
+                //             MetaSVMData.push({
+                //                 ...tempCommonObj,
+                //                 value: temp_MetaSVM_rankscore
+                //             });
+                //         }
+                //         else{
+                //             MetaLRData.push({
+                //                 ...tempCommonObj,
+                //                 value: 0.9634
+                //             })
+                //             MetaSVMData.push({
+                //                 ...tempCommonObj,
+                //                 value: 0.97213
+                //             })
+                //         }
+                //     }
+                // }
                 
-                console.log(MetaLRData);
-                console.log(MetaSVMData);
+                // console.log(MetaLRData);
+                // console.log(MetaSVMData);
 
-                circular = circular.scatter('MetaLR_rankscore',MetaLRData,{
+                circular = circular.scatter('MetaLR_rankscore',vepData.metalr_rankscore_data,{
                     innerRadius: 0.49 / 0.95,
                     outerRadius: 0.75 / 0.95,
                     // color: '#000' || function(d){
@@ -362,7 +368,7 @@ class VEPCircularRender extends BaseRenderer{
                     }
                 });
 
-                circular = circular.heatmap('MetaSVM_rankscore',MetaSVMData,{
+                circular = circular.heatmap('MetaSVM_rankscore',vepData.metasvm_rankscore_data,{
                     innerRadius: 0.1 / 0.95,
                     outerRadius: 0.45 / 0.95,
                     logScale: false,
@@ -381,16 +387,16 @@ class VEPCircularRender extends BaseRenderer{
                 });
         
                 circular.render();
-            })
+        //     })
 
-        });
+        // });
         
 
-        var compare = function(obj1,obj2){
-            var value1 = obj1.start || parseInt(obj1.txStart);
-            var value2 = obj2.start || parseInt(obj2.txStart);
-            return value1>value2?1:(value1 < value2?-1:0);
-        }
+        // var compare = function(obj1,obj2){
+        //     var value1 = obj1.start || parseInt(obj1.txStart);
+        //     var value2 = obj2.start || parseInt(obj2.txStart);
+        //     return value1>value2?1:(value1 < value2?-1:0);
+        // }
     }
 }
         
