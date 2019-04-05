@@ -138,7 +138,7 @@ export function funcUpload(InputFile:any){
         let chunkFile = JSON.parse(JSON.stringify(preloadedJSON.file));
         let chunkChunk = JSON.parse(JSON.stringify(preloadedJSON.chunk));
         Object.assign(chunkFile,chunkChunk);
-        console.log(chunkFile);
+        // console.log(chunkFile);
         switch(uploadChunkList.fileStatus){
             case 'posting':
               let posting_uploadedPercent = Math.round((uploadChunkList.uploadedChunk.length/preloadedJSON.file.chunksNumber)*100);
@@ -175,7 +175,7 @@ export function funcUpload(InputFile:any){
                   data: chunkFile
               }).then(response => {
                 //   console.log(response);
-                //   console.log(JSON.parse(response.data.data));
+                  console.log(JSON.parse(response.data.data));
                 //   JSON.parse(response.data.data).map((value:any)=>{
                 //     if(value.most_severe_consequence === 'missense_variant'){
                 //         console.log(value);
@@ -209,14 +209,14 @@ export function funcUpload(InputFile:any){
         chunkFileReader.readAsText(blobSlice.call(InputFile,chunkStart,chunkEnd));
     }
     totalFileReader.onloadend = function (){
-        console.log('onloadedend'+preloadedJSON.file.fileMd5);
+        // console.log('onloadedend'+preloadedJSON.file.fileMd5);
         axios({
             method: 'post',
             url: `http://222.20.79.250:8081/api/pullChunkList?fileMd5=${preloadedJSON.file.fileMd5}&chunksNumber=${preloadedJSON.file.chunksNumber}`
         }).then(response => {
             uploadChunkList = JSON.parse(JSON.stringify(response.data));
-            console.log(uploadChunkList);
-            console.log(uploadChunkList.fileStatus);
+            // console.log(uploadChunkList);
+            // console.log(uploadChunkList.fileStatus);
             if(uploadChunkList.fileStatus != 'posted'){
                 store.dispatch(actions.FileUploadProgress(0,'Uploading...'));
             }else{

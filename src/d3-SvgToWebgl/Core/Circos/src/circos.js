@@ -143,4 +143,5 @@ const Circos = (conf) => {
   return instance
 }
 
-export default Circos
+// export default Circos
+export default Core

@@ -1,0 +1,19 @@
+[{
+    "id": "chr1",
+    "label": "chr1",
+    "color": "#1f77b4",
+    "len": 249250621
+  },
+  {
+    "id": "chr2",
+    "label": "chr2",
+    "color": "#aec7e8",
+    "len": 243199373
+  },
+  {
+    "id": "chr3",
+    "label": "chr3",
+    "color": "#ff7f0e",
+    "len": 198022430
+  }
+]

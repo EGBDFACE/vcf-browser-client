@@ -11,7 +11,7 @@ var all_variant_chrom = [],
     metasvm_rankscore_data = [];
 
 var get_all_variant_chrom = function(data,callback){
-    // console.log('get_all_variant_chrom');
+    console.log('get_all_variant_chrom');
     for(let i = 0;i<data.length;i++){
         if(!all_variant_chrom.length){
             all_variant_chrom.push(data[i].seq_region_name);
@@ -26,7 +26,7 @@ var get_all_variant_chrom = function(data,callback){
 }
 
 var get_layout_data = function(callback){
-    // console.log('get_layout_data');
+    console.log('get_layout_data');
     d3_request.json(GRCh38_JSON,d=>{
         layout_data = d.filter(value => {
             for(let i=0;i<all_variant_chrom.length;i++){
@@ -41,7 +41,7 @@ var get_layout_data = function(callback){
 }
 
 var get_geno_data = function(callback){
-    // console.log('get_geno_data');
+    console.log('get_geno_data');
     // if(!geno_data.length){
     d3_request.tsv(Gene_GRCh37,d=>{
         for(let i=0;i<d.length;i++){
@@ -60,7 +60,7 @@ var get_geno_data = function(callback){
 }
 
 var get_highlight_data = function(data,callback){
-    // console.log('get_highlight_data');
+    console.log('get_highlight_data');
     for(let i=0;i<data.length;i++){
         let chromTemp = 'chr' + data[i].seq_region_name;
         for(let j=0;j<geno_data[chromTemp].length;j++){
@@ -85,7 +85,7 @@ var get_highlight_data = function(data,callback){
 }
 
 var get_variant_data = function(data,callback){
-    // console.log('get_variant_data');
+    console.log('get_variant_data');
     variant_data = data.map(value => {
         return{
             block_id: 'chr' + value.seq_region_name,
@@ -100,7 +100,7 @@ var get_variant_data = function(data,callback){
 }
 
 var get_meta_data = function(data,callback){
-    // console.log('get_meta_data');
+    console.log('get_meta_data');
     for(let i=0;i<data.length;i++){
         if(data[i].transcript_consequences){
             let tempCommonObj = {

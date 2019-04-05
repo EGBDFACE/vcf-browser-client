@@ -110,7 +110,7 @@ function tableDisplayVCF(state:tableFrameVCF,action:TableDisplay){
 function fileReceiveFunc(state:fileReceive,action:VEPFileReceive){
     switch(action.type){
         case 'VEP_RESULT_NOTPOSTED_CHANGE':
-            console.log('vep_result_notposted_change');
+            // console.log('vep_result_notposted_change');
             if(action.fileMd5 === state.fileMd5){
                 return{
                     ...state,

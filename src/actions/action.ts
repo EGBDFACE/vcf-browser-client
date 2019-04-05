@@ -77,7 +77,7 @@ export function decrementEnthusiasm():DecrementEnthusiasm{
 }
 // export function FileSlected(name:string):FileSlected{
 export function FileSlected(file:any):UploadStatus{
-    console.log(file);
+    // console.log(file);
     return {
         type: FILE_SELECTED,
         file

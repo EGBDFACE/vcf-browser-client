@@ -501,19 +501,40 @@ var mouseEvents = {
 };
 
 function canvasListener(event) {
-	var canvas = document.getElementsByTagName('canvas')[0];
-	var context = canvas.getContext('webgl');
-	// var context = this.getContext('webgl'),
+	var canvasTemp = document.getElementsByTagName('canvas')[0];
+	var context = canvasTemp.getContext('webgl');
 	var	root = context._rootElement;
-	console.log(canvas);
-	console.log(context);
-	console.log(root);
+
+	// var context = this.getContext('webgl');
+	// var	root = context._rootElement;
+	// console.log(canvas);
+	// console.log(context);
+	// console.log(root);
 	// set refresh to true
+	// root.events.wheel[0] = function(event1){
+	// 	var event0 = event;
+	// 	envent = event1;
+	// 	try{
+	// 		listener.call(this,this.__data__,index,group);
+	// 	}finally{
+	// 		event = event0;
+	// 	}
+	// }
 	root.refresh = true;
 	if (!root) return;
 	trigger(root, event);
 }
-
+function contextListener(listener,index,group){
+	return function(event1){
+		var event0 = event;
+		event = event1;
+		try{
+			listener.call(this,this.__data__,index,group);
+		}finally{
+			event = event0;
+		}
+	}
+}
 function canvasNodeListener(event) {
 	var context = this.getContext('webgl'),
 		root = context._rootElement;
