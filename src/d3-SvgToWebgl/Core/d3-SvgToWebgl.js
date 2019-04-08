@@ -504,7 +504,9 @@ function canvasListener(event) {
 	var canvasTemp = document.getElementsByTagName('canvas')[0];
 	var context = canvasTemp.getContext('webgl');
 	var	root = context._rootElement;
-
+	root.events.wheel[0] = root.__on[0].listener;
+	root.events.mousedown[0] = root.__on[1].listener;
+	root.events.dblclick[0] = root.__on[2].listener;
 	// var context = this.getContext('webgl');
 	// var	root = context._rootElement;
 	// console.log(canvas);
