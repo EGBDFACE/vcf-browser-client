@@ -1,5 +1,7 @@
 import BaseRenderer from '../../d3-SvgToWebgl/Renderer/BaseRenderer';
-import Circos from '../../d3-SvgToWebgl/Core/Circos/src/circos.js';
+// import Circos from '../../d3-SvgToWebgl/Core/Circos/src/circos.js';
+import Core from '../../d3-SvgToWebgl/Core/Circos/src/circos.js';
+
 const d3 = Object.assign({},require('d3-queue'),require('d3-request'),require('d3-array'));
 import defaultConfigs from '../../d3-SvgToWebgl/Config';
 import { scaleQuantize } from 'd3';
@@ -25,7 +27,8 @@ class VEPCircularRender extends BaseRenderer{
         const width = this.renderer.view.width/this.renderer.resolution;
         const height = this.renderer.view.height/this.renderer.resolution;
 
-        const circos = Circos({
+        // const circos = Circos({
+        const circos = new Core({
             container: this.renderer.view,
             renderer: this.renderer,
             width: width,

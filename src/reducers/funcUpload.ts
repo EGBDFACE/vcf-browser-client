@@ -7,7 +7,7 @@ interface preloadedFormat{
     file:{
         fileMd5:string,
         chunksNumber: number,
-        chunkSize: number,
+        // chunkSize: number,
         fileMd5Status:boolean
     },
     chunk:{
@@ -37,13 +37,18 @@ export function funcUpload(InputFile:any){
     let chunkFileReader = new FileReader();
     let totalFileReader = new FileReader();
     let currentChunk = 0;
+    // let chunkSize:number[];
+    // const firstChunkSize = 512*1024;
+    // chunkSize[0] = firstChunkSize;
+    // chunkSize[1] = (InputFile.size > 10*1024*1024) ? 10*1024*1024 : 1024*1024;
     let chunkSize = (InputFile.size > 10*1024*1024) ? 10*1024*1024 :1024*1024;
     let uploadChunkList:any;
     let preloadedJSON:preloadedFormat = {
         file:{
             fileMd5: '',
             chunksNumber : Math.ceil(InputFile.size / chunkSize),
-            chunkSize: chunkSize,
+            // chunksNumber: Math.ceil((InputFile.size - chunkSize[0]) / chunkSize[1]) + 1,
+            // chunkSize: chunkSize,
             fileMd5Status:false
         },
         chunk:{
@@ -204,6 +209,14 @@ export function funcUpload(InputFile:any){
         }
     }
     function loadChunks(){
+        // let chunkStart:number,chunkEnd:number;
+        // if(currentChunk === 0){
+        //     chunkStart = 0;
+        //     chunkEnd = (chunkSize[0] > InputFile.size) ? InputFile.size : chunkSize[0];
+        // }else{
+        //     chunkStart = chunkSize[0] + (currentChunk - 1)*chunkSize[1];
+        //     chunkEnd = ((chunkStart + chunkSize[1]) > InputFile.size) ? InputFile.size : chunkSize[1];
+        // }
         let chunkStart = currentChunk * chunkSize;
         let chunkEnd  = ((chunkStart + chunkSize) > InputFile.size) ? InputFile.size : chunkStart + chunkSize;
         chunkFileReader.readAsText(blobSlice.call(InputFile,chunkStart,chunkEnd));
