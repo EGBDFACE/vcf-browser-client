@@ -180,7 +180,12 @@ export function funcUpload(InputFile:any){
                   data: chunkFile
               }).then(response => {
                 //   console.log(response);
-                  console.log(JSON.parse(response.data.data));
+                //   console.log(JSON.parse(response.data.data));
+                //   for(let i=0;i<JSON.parse(response.data.data).length;i++){
+                //       if((JSON.parse(response.data.data)[i].id == 'rs17878711')){
+                //           console.log(JSON.parse(response.data.data)[i]);
+                //       }
+                //   }
                 //   JSON.parse(response.data.data).map((value:any)=>{
                 //     if(value.most_severe_consequence === 'missense_variant'){
                 //         console.log(value);
