@@ -85,7 +85,7 @@ export function funcUpload(InputFile:any){
             if(i === 0){
                 if(preChunkEndLine){
                     let vArray = v.split('\t');
-                    if(((+vArray[0]<23)&&(+vArray[0]>0))||(vArray[0] == 'X')||(vArray[0] == 'Y')||(vArray[0].indexOf('hs') == 0)||(vArray[0].indexOf('CHR') == 0)||(vArray[0].indexOf('GL') == 0)||(vArray[0].indexOf('MT') == 0)||(vArray[0].indexOf('NC')==0)){
+                    if((((+vArray[0]<23)&&(+vArray[0]>0))||(vArray[0] == 'X')||(vArray[0] == 'Y')||(vArray[0].indexOf('hs') == 0)||(vArray[0].indexOf('CHR') == 0)||(vArray[0].indexOf('GL') == 0)||(vArray[0].indexOf('MT') == 0)||(vArray[0].indexOf('NC')==0))&&Boolean(Number(vArray[1]))){
                         let preChunkEndLineArray = preChunkEndLine.split('\t');
                         chunkTabDisplay[indexChunkTabDisplay] = new Array();
                         chunkTabDisplay[indexChunkTabDisplay+1] = new Array();
@@ -143,7 +143,7 @@ export function funcUpload(InputFile:any){
         let chunkFile = JSON.parse(JSON.stringify(preloadedJSON.file));
         let chunkChunk = JSON.parse(JSON.stringify(preloadedJSON.chunk));
         Object.assign(chunkFile,chunkChunk);
-        // console.log(chunkFile);
+        console.log(chunkFile);
         switch(uploadChunkList.fileStatus){
             case 'posting':
               let posting_uploadedPercent = Math.round((uploadChunkList.uploadedChunk.length/preloadedJSON.file.chunksNumber)*100);
@@ -179,8 +179,8 @@ export function funcUpload(InputFile:any){
                   url:`http://222.20.79.250:8081/api/upload_file_part?fileMd5=${preloadedJSON.file.fileMd5}&chunkMd5=${chunkFile.chunkMd5}&chunkNumber=${chunkFile.chunkNumber}`,
                   data: chunkFile
               }).then(response => {
-                //   console.log(response);
-                //   console.log(JSON.parse(response.data.data));
+                  console.log(response);
+                  console.log(JSON.parse(response.data.data));
                 //   for(let i=0;i<JSON.parse(response.data.data).length;i++){
                 //       if((JSON.parse(response.data.data)[i].id == 'rs17878711')){
                 //           console.log(JSON.parse(response.data.data)[i]);
@@ -200,7 +200,7 @@ export function funcUpload(InputFile:any){
                     store.dispatch(actions.FileUploadProgress(Math.round((response.data.uploadedChunk.length/response.data.chunksNumber)*100),'Uploading...'));
                     // vepResultFromServer.push(response.data);
                   }
-                  store.dispatch(actions.VEPFileReceive({data:response.data.data,fileMd5:response.data.fileMd5}));
+                //   store.dispatch(actions.VEPFileReceive({data:response.data.data,fileMd5:response.data.fileMd5}));
               }).catch(error => {
                   console.log(error);
               })
