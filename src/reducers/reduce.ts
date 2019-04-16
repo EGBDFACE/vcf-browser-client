@@ -1,7 +1,8 @@
 import { EnthusiasmAction,UploadStatus, TableDisplay, VEPFileReceive } from '../actions/action';
 // import {StoreState} from '../types/storeInterface';
 import { StoreState, enthusiasm, fileUpload,tableFrameVCF, fileReceive } from '../store/store';
-import { funcUpload } from './funcUpload';
+// import { funcUpload } from './funcUpload';
+import fileSplit from './fileHandle';
 import { combineReducers } from 'redux';
 import { IgnorePlugin } from 'webpack';
 import { Table } from 'react-virtualized';
@@ -56,7 +57,8 @@ function fileUpload(state:fileUpload,action:UploadStatus){
                 }
             }
         case 'FILE_UPLOAD':
-            funcUpload(action.file);
+            // funcUpload(action.file);
+            fileSplit(action.file);
             return {
                 ...state,
                 fileStatus: 'UPLOADING',

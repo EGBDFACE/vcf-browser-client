@@ -37,17 +37,17 @@ export function funcUpload(InputFile:any){
     let chunkFileReader = new FileReader();
     let totalFileReader = new FileReader();
     let currentChunk = 0;
-    // let chunkSize:number[];
-    // const firstChunkSize = 512*1024;
-    // chunkSize[0] = firstChunkSize;
-    // chunkSize[1] = (InputFile.size > 10*1024*1024) ? 10*1024*1024 : 1024*1024;
-    let chunkSize = (InputFile.size > 10*1024*1024) ? 10*1024*1024 :1024*1024;
+    let chunkSize:number[] =[];
+    const firstChunkSize = 10*1024;
+    chunkSize[0] = firstChunkSize;
+    chunkSize[1] = (InputFile.size > 1024*1024) ? 30*1024 : 20*1024;
+    // let chunkSize = (InputFile.size > 10*1024*1024) ? 10*1024*1024 :1024*1024;
     let uploadChunkList:any;
     let preloadedJSON:preloadedFormat = {
         file:{
             fileMd5: '',
-            chunksNumber : Math.ceil(InputFile.size / chunkSize),
-            // chunksNumber: Math.ceil((InputFile.size - chunkSize[0]) / chunkSize[1]) + 1,
+            // chunksNumber : Math.ceil(InputFile.size / chunkSize),
+            chunksNumber: Math.ceil((InputFile.size - chunkSize[0]) / chunkSize[1]) + 1,
             // chunkSize: chunkSize,
             fileMd5Status:false
         },
@@ -78,7 +78,8 @@ export function funcUpload(InputFile:any){
         sparkChunk.append(e.target.result);
         preloadedJSON.chunk.chunkMd5 = sparkChunk.end();
         preloadedJSON.chunk.chunkFile.body = [];
-        let ChunkStringArray = e.target.result.trim().split('\n');
+        // let ChunkStringArray = e.target.result.trim().split('\n');  
+        let ChunkStringArray = e.target.result.split('\n');
         let chunkTabDisplay:string[][] =[];
         let indexChunkTabDisplay:number = 0;
         ChunkStringArray.forEach(function(v:string,i:number=0){
@@ -110,6 +111,9 @@ export function funcUpload(InputFile:any){
                         }
                         indexChunkTabDisplay++;
                         totalIndexTabDisplay++;
+                        // console.log('prechunkendline: ' + preChunkEndLine);
+                        // console.log('nowline: ' + v);
+                        // console.log('temp: ' +temp);
                         preloadedJSON.chunk.chunkFile.body.push(dealLine(temp));
                     }
                 }
@@ -134,96 +138,112 @@ export function funcUpload(InputFile:any){
                     }
                 }else if(v.indexOf('##fileformat') != -1){
                     preloadedJSON.chunk.chunkFile.fileformat = v;
-                }else if(v.indexOf('##') != -1){}else{
+                }else if(v.indexOf('##') != -1){
+
+                }else{
                     console.log('something wrong when split vcf file');
                 }
             }
         });
         store.dispatch(actions.FileTabDisplay(chunkTabDisplay));
-        let chunkFile = JSON.parse(JSON.stringify(preloadedJSON.file));
-        let chunkChunk = JSON.parse(JSON.stringify(preloadedJSON.chunk));
-        Object.assign(chunkFile,chunkChunk);
-        console.log(chunkFile);
-        switch(uploadChunkList.fileStatus){
-            case 'posting':
-              let posting_uploadedPercent = Math.round((uploadChunkList.uploadedChunk.length/preloadedJSON.file.chunksNumber)*100);
-              store.dispatch(actions.FileUploadProgress(posting_uploadedPercent,'Uploading...'));
-              for(var i =0 ;i<uploadChunkList.uploadedChunk.length;i++){
-                  if(chunkFile.chunkMd5 == uploadChunkList.uploadedChunk[i].chunkMd5){
-                    break;
-                    }
-              }
-              if(i == uploadChunkList.uploadedChunk.length){
+        
+        if(preloadedJSON.chunk.chunkFile.body.length === 0){
+            console.log('null');
+            currentChunk ++;
+            loadChunks();
+        }else{
+            for(let i=0;i<preloadedJSON.chunk.chunkFile.body.length;i++){
+                if(!preloadedJSON.chunk.chunkFile.body[i]){
+                    preloadedJSON.chunk.chunkFile.body.splice(i,1);
+                }
+            }
+            let chunkFile = JSON.parse(JSON.stringify(preloadedJSON.file));
+            let chunkChunk = JSON.parse(JSON.stringify(preloadedJSON.chunk));
+            Object.assign(chunkFile,chunkChunk);
+            console.log(chunkFile);
+            switch(uploadChunkList.fileStatus){
+                case 'posting':
+                let posting_uploadedPercent = Math.round((uploadChunkList.uploadedChunk.length/preloadedJSON.file.chunksNumber)*100);
+                store.dispatch(actions.FileUploadProgress(posting_uploadedPercent,'Uploading...'));
+                for(var i =0 ;i<uploadChunkList.uploadedChunk.length;i++){
+                    if(chunkFile.chunkMd5 == uploadChunkList.uploadedChunk[i].chunkMd5){
+                        break;
+                        }
+                }
+                if(i == uploadChunkList.uploadedChunk.length){
+                    axios({
+                        method: 'post',
+                        url:`http://222.20.79.250:8081/api/upload_file_part?fileMd5=${preloadedJSON.file.fileMd5}&chunkMd5=${chunkFile.chunkMd5}&chunkNumber=${chunkFile.chunkNumber}`,
+                        data: chunkFile
+                    }).then(response => {
+                        // console.log(response.data);
+                        if(response.data.chunksNumber === response.data.uploadChunk.length){
+                            store.dispatch(actions.FileUploadProgress(100,'Uploaded!'));
+                            store.dispatch(actions.UploadStatusChange());
+                        }else{
+                            store.dispatch(actions.FileUploadProgress(Math.round((response.data.uploadedChunk.length/response.data.chunksNumber)*100),'Uploading...'));
+                        }
+                    }).catch(error => {
+                        console.log(error);
+                    })
+                }else{
+                    console.log(`chunkMd5=${chunkFile.chunkMd5}have uploaded`);
+                }
+                break;
+                case 'notposted':
                 axios({
                     method: 'post',
                     url:`http://222.20.79.250:8081/api/upload_file_part?fileMd5=${preloadedJSON.file.fileMd5}&chunkMd5=${chunkFile.chunkMd5}&chunkNumber=${chunkFile.chunkNumber}`,
                     data: chunkFile
                 }).then(response => {
-                    // console.log(response.data);
-                    if(response.data.chunksNumber === response.data.uploadChunk.length){
+                    //   console.log(response);
+                    console.log(JSON.parse(response.data.data));
+                    //   for(let i=0;i<JSON.parse(response.data.data).length;i++){
+                    //       if((JSON.parse(response.data.data)[i].id == 'rs17878711')){
+                    //           console.log(JSON.parse(response.data.data)[i]);
+                    //       }
+                    //   }
+                    //   JSON.parse(response.data.data).map((value:any)=>{
+                    //     if(value.most_severe_consequence === 'missense_variant'){
+                    //         console.log(value);
+                    //     }
+                    //   })
+                    if(response.data.chunksNumber == response.data.uploadedChunk.length){
                         store.dispatch(actions.FileUploadProgress(100,'Uploaded!'));
                         store.dispatch(actions.UploadStatusChange());
+                        // vepResultFromServer.push(response.data);
+                        // console.log(vepResultFromServer);
                     }else{
                         store.dispatch(actions.FileUploadProgress(Math.round((response.data.uploadedChunk.length/response.data.chunksNumber)*100),'Uploading...'));
+                        // vepResultFromServer.push(response.data);
                     }
+                    store.dispatch(actions.VEPFileReceive({data:response.data.data,fileMd5:response.data.fileMd5}));
                 }).catch(error => {
                     console.log(error);
                 })
-              }else{
-                console.log(`chunkMd5=${chunkFile.chunkMd5}have uploaded`);
-              }
-              break;
-            case 'notposted':
-              axios({
-                  method: 'post',
-                  url:`http://222.20.79.250:8081/api/upload_file_part?fileMd5=${preloadedJSON.file.fileMd5}&chunkMd5=${chunkFile.chunkMd5}&chunkNumber=${chunkFile.chunkNumber}`,
-                  data: chunkFile
-              }).then(response => {
-                  console.log(response);
-                  console.log(JSON.parse(response.data.data));
-                //   for(let i=0;i<JSON.parse(response.data.data).length;i++){
-                //       if((JSON.parse(response.data.data)[i].id == 'rs17878711')){
-                //           console.log(JSON.parse(response.data.data)[i]);
-                //       }
-                //   }
-                //   JSON.parse(response.data.data).map((value:any)=>{
-                //     if(value.most_severe_consequence === 'missense_variant'){
-                //         console.log(value);
-                //     }
-                //   })
-                  if(response.data.chunksNumber == response.data.uploadedChunk.length){
-                    store.dispatch(actions.FileUploadProgress(100,'Uploaded!'));
-                    store.dispatch(actions.UploadStatusChange());
-                    // vepResultFromServer.push(response.data);
-                    // console.log(vepResultFromServer);
-                  }else{
-                    store.dispatch(actions.FileUploadProgress(Math.round((response.data.uploadedChunk.length/response.data.chunksNumber)*100),'Uploading...'));
-                    // vepResultFromServer.push(response.data);
-                  }
-                //   store.dispatch(actions.VEPFileReceive({data:response.data.data,fileMd5:response.data.fileMd5}));
-              }).catch(error => {
-                  console.log(error);
-              })
-              break;
-            case 'posted':
-              break;
-        }
-        currentChunk++;
-        if(currentChunk < preloadedJSON.file.chunksNumber){
-            loadChunks(); 
-        }
+                break;
+                case 'posted':
+                break;
+            }
+            currentChunk++;
+            if(currentChunk < preloadedJSON.file.chunksNumber){
+                loadChunks(); 
+            }
+            }
     }
     function loadChunks(){
-        // let chunkStart:number,chunkEnd:number;
-        // if(currentChunk === 0){
-        //     chunkStart = 0;
-        //     chunkEnd = (chunkSize[0] > InputFile.size) ? InputFile.size : chunkSize[0];
-        // }else{
-        //     chunkStart = chunkSize[0] + (currentChunk - 1)*chunkSize[1];
-        //     chunkEnd = ((chunkStart + chunkSize[1]) > InputFile.size) ? InputFile.size : chunkSize[1];
-        // }
-        let chunkStart = currentChunk * chunkSize;
-        let chunkEnd  = ((chunkStart + chunkSize) > InputFile.size) ? InputFile.size : chunkStart + chunkSize;
+        let chunkStart:number,chunkEnd:number;
+        if(currentChunk === 0){
+            chunkStart = 0;
+            chunkEnd = (chunkSize[0] > InputFile.size) ? InputFile.size : chunkSize[0];
+        }else{
+            chunkStart = chunkSize[0] + (currentChunk - 1)*chunkSize[1];
+            chunkEnd = ((chunkStart + chunkSize[1]) > InputFile.size) ? InputFile.size : (chunkStart + chunkSize[1]);
+        }
+        // console.log(chunkStart);
+        // console.log(chunkEnd);
+        // let chunkStart = currentChunk * chunkSize;
+        // let chunkEnd  = ((chunkStart + chunkSize) > InputFile.size) ? InputFile.size : chunkStart + chunkSize;
         chunkFileReader.readAsText(blobSlice.call(InputFile,chunkStart,chunkEnd));
     }
     totalFileReader.onloadend = function (){
@@ -255,6 +275,9 @@ export function funcUpload(InputFile:any){
 }
 function dealLine(v:string){
     let tmp = v.split('\t');
+    if(tmp.length < 8){
+        return null;
+    }
     let obj_upload = {
         CHROM: tmp[0],
         POS: tmp[1],
@@ -269,6 +292,8 @@ function dealLine(v:string){
     let indexDEL = tmp[4].indexOf('<DEL>');
     let indexDUP = tmp[4].indexOf('<DUP>');
     let indexTDUP = tmp[4].indexOf('<TDUP>');
+    // console.log(v);
+    // console.log(tmp);
     let indexEND = tmp[7].indexOf('END');
     if(indexINS+indexDEL+indexDUP+indexTDUP === -4){
         if(tmp[4].indexOf('<') == -1){}
