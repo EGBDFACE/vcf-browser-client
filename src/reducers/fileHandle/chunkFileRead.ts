@@ -17,17 +17,16 @@ export function chunkFileRead(chunkString:string):chunk_result_item[]{
 
    for(let i=0; i<chunkArray.length; i++){
        let item = chunkArray[i];
-       let itemArray = item.split('\t');
        if((i === 0)&&(preChunkEndLine)){
-           if((((+itemArray[0]<23)&&(+itemArray[0]>0))||(itemArray[0] == 'X')||(itemArray[0] == 'Y')||(itemArray[0].indexOf('hs') == 0)||(itemArray[0].indexOf('CHR') == 0)||(itemArray[0].indexOf('GL') == 0)||(itemArray[0].indexOf('MT') == 0)||(itemArray[0].indexOf('NC')==0))&&Boolean(Number(itemArray[1]))){
+           if(isCompleteLine(item)){
                chunkResult.push(dealLine(preChunkEndLine));
                chunkResult.push(dealLine(item));
-           }else if((preChunkEndLine + item).indexOf('#') === -1){
+           }else if(isCompleteLine(preChunkEndLine + item)){
                chunkResult.push(dealLine(preChunkEndLine+item));
            }
        }else if(i === chunkArray.length-1){
            preChunkEndLine = item;
-       }else if(item.indexOf('#') === -1){
+       }else if(isCompleteLine(item)){
            chunkResult.push(dealLine(item));
        }
    }
@@ -75,4 +74,28 @@ function dealLine(v:string){
         }
     }
     return obj_upload;
+}
+
+function isCompleteLine(v:string){
+    if(v.indexOf('#') != -1){
+        return false;
+    }
+
+    let v_A = v.split('\t');
+    let chr = v_A[0];
+    let chr_N = parseInt(chr);
+
+    if((chr_N > 22) || (chr_N < 1)){
+        if((chr != 'X') && (chr != 'Y')){
+            return false;
+        }
+    }
+    
+    let pos = Number(v_A[1]); //parseInt 可以解析以数字开头的部分数字字符串（非数字部分在转换过程被删除）
+
+    if(isNaN(pos)){
+        return false;
+    }
+
+    return true;
 }

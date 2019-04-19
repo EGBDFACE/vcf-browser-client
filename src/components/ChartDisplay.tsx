@@ -25,21 +25,22 @@ export default class ChartDisplay extends React.Component<Props,States>{
         const { data,fileState } = this.props; 
         console.log('component update');
         if((data.length != 0)&&(fileState != 'PREPARE_TO_UPLOAD')){
-            d3Queue.queue()
-                .defer(vepData.get_all_variant_chrom,JSON.parse(data))
-                .defer(vepData.get_geno_data)
-                .defer(vepData.get_variant_data,JSON.parse(data))
-                .defer(vepData.get_meta_data,JSON.parse(data))
-                .await(function(error:any){
-                    if(error) throw error;
-                    d3Queue.queue()
-                        .defer(vepData.get_layout_data)
-                        .defer(vepData.get_highlight_data,JSON.parse(data))
-                        .await(function(error:any){
-                            if(error) throw error;
-                            drawVepResultDiagram();
-                        })
-                })
+            // console.log(data);
+            // d3Queue.queue()
+            //     .defer(vepData.get_all_variant_chrom,JSON.parse(data))
+            //     .defer(vepData.get_geno_data)
+            //     .defer(vepData.get_variant_data,JSON.parse(data))
+            //     .defer(vepData.get_meta_data,JSON.parse(data))
+            //     .await(function(error:any){
+            //         if(error) throw error;
+            //         d3Queue.queue()
+            //             .defer(vepData.get_layout_data)
+            //             .defer(vepData.get_highlight_data,JSON.parse(data))
+            //             .await(function(error:any){
+            //                 if(error) throw error;
+            //                 drawVepResultDiagram();
+            //             })
+            //     })
         }
     }
     render(){

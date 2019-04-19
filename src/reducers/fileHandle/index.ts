@@ -19,7 +19,10 @@ interface upload_chunk_list{
 export default function fileHandle(inputFile: any){
     let totalFileReader = new FileReader();
     let totalFileMd5:string = '';
-    let uploadChunkList:upload_chunk_list;
+    let uploadChunkList:upload_chunk_list = {
+        fileStatus: '',
+        uploadedChunk: []
+    };
 
     totalFileReader.readAsArrayBuffer(inputFile);
 
@@ -30,14 +33,21 @@ export default function fileHandle(inputFile: any){
     }
 
     totalFileReader.onloadend = ()=>{
+        let chunksNumber: number = getChunksNumber(inputFile);
         axios({
             method: 'post',
             baseURL: BASE_URL,
-            url: `/pullChunkList?fileMd5=${totalFileMd5}`
+            url: `/pullChunkList?fileMd5=${totalFileMd5}&chunksNumber=${chunksNumber}`
         }).then( response => {
-            uploadChunkList = response.data;
-            if(uploadChunkList.fileStatus != 'posted'){
+            console.log(response);
+            // uploadChunkList = response.data;
+            uploadChunkList.fileStatus = response.data.fileStatus;
+            uploadChunkList.uploadedChunk = response.data.uploadedChunk ? response.data.uploadedChunk : [];
+            if(uploadChunkList.fileStatus == 'notposted'){
                 store.dispatch(actions.FileUploadProgress(0,'Uploading'));
+                fileSplit(inputFile,uploadChunkList,totalFileMd5);
+            }else if(uploadChunkList.fileStatus == 'posting'){
+                store.dispatch(actions.FileUploadProgress(Math.round((uploadChunkList.uploadedChunk.length / chunksNumber) * 100),'Uploading'));
                 fileSplit(inputFile,uploadChunkList,totalFileMd5);
             }else{
                 store.dispatch(actions.FileUploadProgress(100,'Uploaded!'));
@@ -63,21 +73,20 @@ function fileSplit(inputFile: any, uploadChunkList: upload_chunk_list,totalFileM
         chunkEnd: number = FIRST_CHUNK_SIZE;
     let chunkFileReader = new FileReader();
     let blobSlice = File.prototype.slice;
-    let chunksNumber: number = 0;
-    let computeSize: number = 0;
-
-    console.log(inputFile.size);
-    while(computeSize < inputFile.size){
-        if(computeSize === 0){
-            computeSize = FIRST_CHUNK_SIZE;
-        }else if(computeSize + chunksNumber * UNIT_CHUNK_SIZE <= MAX_CHUNK_SIZE){
-            computeSize += chunksNumber * UNIT_CHUNK_SIZE;
-        }else if(computeSize + chunksNumber * UNIT_CHUNK_SIZE > MAX_CHUNK_SIZE){
-            computeSize += MAX_CHUNK_SIZE;
-        }
-        chunksNumber++
-    }
-    console.log(chunksNumber);
+    // let chunksNumber: number = 0;
+    let chunksNumber: number = getChunksNumber(inputFile);
+    // console.log(inputFile.size);
+    // while(computeSize < inputFile.size){
+    //     if(computeSize === 0){
+    //         computeSize = FIRST_CHUNK_SIZE;
+    //     }else if(computeSize + chunksNumber * UNIT_CHUNK_SIZE <= MAX_CHUNK_SIZE){
+    //         computeSize += chunksNumber * UNIT_CHUNK_SIZE;
+    //     }else if(computeSize + chunksNumber * UNIT_CHUNK_SIZE > MAX_CHUNK_SIZE){
+    //         computeSize += MAX_CHUNK_SIZE;
+    //     }
+    //     chunksNumber++
+    // }
+    // console.log(chunksNumber);
 
     function loadChunks(preStart: number, preEnd: number){
         // let start: number, end: number;
@@ -91,8 +100,6 @@ function fileSplit(inputFile: any, uploadChunkList: upload_chunk_list,totalFileM
             chunkStart = preEnd;
             chunkEnd = (chunkStart + currentChunk * UNIT_CHUNK_SIZE > inputFile.size) ? inputFile.size : chunkStart + currentChunk * UNIT_CHUNK_SIZE;
         }
-        console.log(chunkStart);
-        console.log(chunkEnd);
         chunkFileReader.readAsText(blobSlice.call(inputFile, chunkStart, chunkEnd));
     }
 
@@ -102,24 +109,46 @@ function fileSplit(inputFile: any, uploadChunkList: upload_chunk_list,totalFileM
         let chunkSparkMd5 = new SparkMD5();
         chunkSparkMd5.append(e.target.result);
         let chunkUploadedFlag:boolean = false;
+        let currentChunkSparkMd5 = chunkSparkMd5.end();
 
-        if(uploadChunkList.fileStatus !== 'notposted'){
+        if(uploadChunkList.fileStatus == 'posting'){
             let list = uploadChunkList.uploadedChunk;
             
             for(let i=0; i<list.length; i++){
-                if(chunkSparkMd5.end() === list[i].chunkMd5){
+                if(currentChunkSparkMd5 === list[i].chunkMd5){
                     chunkUploadedFlag = true;
                     break;
                 }
             }
-        }else if((!chunkUploadedFlag) || (uploadChunkList.fileStatus === 'notposted')){
-            let chunkResult: chunk_result_item[] =chunkFileRead(e.target.result);
-            chunkFileUpload(chunkResult,totalFileMd5,chunkSparkMd5.end(),chunksNumber)
         }
+        
+        if((!chunkUploadedFlag) || (uploadChunkList.fileStatus == 'notposted')){
+            let chunkResult: chunk_result_item[] = chunkFileRead(e.target.result);
+            chunkFileUpload(chunkResult,totalFileMd5,currentChunkSparkMd5,chunksNumber)
+        }
+
         if(currentChunk < chunksNumber - 1){
             currentChunk++;
             loadChunks(chunkStart, chunkEnd);
         }
     }
 
+}
+
+function getChunksNumber(inputFile:any){
+    let computeSize: number = 0,
+        chunksNumber: number = 0;
+
+    while(computeSize < inputFile.size){
+        if(computeSize === 0){
+            computeSize = FIRST_CHUNK_SIZE;
+        }else if(computeSize + chunksNumber * UNIT_CHUNK_SIZE <= MAX_CHUNK_SIZE){
+            computeSize += chunksNumber * UNIT_CHUNK_SIZE;
+        }else if(computeSize + chunksNumber * UNIT_CHUNK_SIZE > MAX_CHUNK_SIZE){
+            computeSize += MAX_CHUNK_SIZE;
+        }
+        chunksNumber++;
+    }
+
+    return chunksNumber;
 }

@@ -5,6 +5,7 @@ import store from '../../store/store';
 import * as actions from '../../actions/action';
 
 export default function chunkFileUpload(data: chunk_result_item[], fileMd5: string, chunkMd5: string, chunksNumber: number){
+    console.log(`uploadChunkMd5: ${chunkMd5}`);
     axios({
         method: 'post',
         baseURL: BASE_URL,
@@ -18,6 +19,7 @@ export default function chunkFileUpload(data: chunk_result_item[], fileMd5: stri
             store.dispatch(actions.FileUploadProgress(Math.round((res.data.uploadedChunk.length / chunksNumber) * 100), 'Uploading...'));
         }
         console.log(res);
+        store.dispatch(actions.VEPFileReceive({data: res.data.data, fileMd5: res.data.fileMd5}));
     }).catch(err => {
         console.error(err.message);
     })

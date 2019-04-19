@@ -16,7 +16,7 @@ export default class Home extends React.Component<any,any>{
                 <Upload/>
                 {/* <Hello nameadd='sra'/> */}
                 {/* <TableFrame /> */}
-                {/* <ChartDisplay/> */}
+                <ChartDisplay/>
             </div>
         );
     }
