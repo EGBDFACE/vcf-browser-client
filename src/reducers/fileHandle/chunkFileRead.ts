@@ -45,6 +45,7 @@ function dealLine(v:string){
         FILTER: '.',
         INFO: '.'
     };
+    
     let indexINS = tmp[4].indexOf('<INS>');
     let indexDEL = tmp[4].indexOf('<DEL>');
     let indexDUP = tmp[4].indexOf('<DUP>');
@@ -83,7 +84,11 @@ function isCompleteLine(v:string){
 
     let v_A = v.split('\t');
     let chr = v_A[0];
-    let chr_N = parseInt(chr);
+    let chr_N = Number(chr);
+
+    if(isNaN(chr_N)){
+        return false;
+    }
 
     if((chr_N > 22) || (chr_N < 1)){
         if((chr != 'X') && (chr != 'Y')){

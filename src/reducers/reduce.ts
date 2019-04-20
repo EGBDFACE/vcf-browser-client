@@ -117,7 +117,7 @@ function fileReceiveFunc(state:fileReceive,action:VEPFileReceive){
                 return{
                     ...state,
                     // data: state.data.concat(action.data)
-                    data: JSON.stringify(JSON.parse(state.data).concat(JSON.parse(action.data)))
+                    data: state.data.concat(action.data)
                 }
             }else{
                 return{

@@ -5,7 +5,7 @@ import { FIRST_CHUNK_SIZE , UNIT_CHUNK_SIZE , MAX_CHUNK_SIZE } from '../../const
 import store from '../../store/store';
 import * as actions from '../../actions/action';
 import {chunkFileRead, chunk_result_item} from './chunkFileRead';
-import chunkFileUpload from './chunkFileUpload';
+import {chunkFileUpload } from './chunkFileUpload';
 
 interface upload_chunk_list_item_info{
     chunkMd5: string,
@@ -39,10 +39,11 @@ export default function fileHandle(inputFile: any){
             baseURL: BASE_URL,
             url: `/pullChunkList?fileMd5=${totalFileMd5}&chunksNumber=${chunksNumber}`
         }).then( response => {
-            console.log(response);
+            // console.log(response);
             // uploadChunkList = response.data;
             uploadChunkList.fileStatus = response.data.fileStatus;
             uploadChunkList.uploadedChunk = response.data.uploadedChunk ? response.data.uploadedChunk : [];
+            // console.log(response);
             if(uploadChunkList.fileStatus == 'notposted'){
                 store.dispatch(actions.FileUploadProgress(0,'Uploading'));
                 fileSplit(inputFile,uploadChunkList,totalFileMd5);
@@ -52,6 +53,9 @@ export default function fileHandle(inputFile: any){
             }else{
                 store.dispatch(actions.FileUploadProgress(100,'Uploaded!'));
                 store.dispatch(actions.UploadStatusChange());
+            }
+            if(response.data.uploadedChunksCombineData.length != 0){
+                store.dispatch(actions.VEPFileReceive({data: response.data.uploadedChunksCombineData, fileMd5: response.data.fileMd5}));
             }
         }).catch( err => {
             console.error(err.message);
@@ -73,23 +77,10 @@ function fileSplit(inputFile: any, uploadChunkList: upload_chunk_list,totalFileM
         chunkEnd: number = FIRST_CHUNK_SIZE;
     let chunkFileReader = new FileReader();
     let blobSlice = File.prototype.slice;
-    // let chunksNumber: number = 0;
     let chunksNumber: number = getChunksNumber(inputFile);
-    // console.log(inputFile.size);
-    // while(computeSize < inputFile.size){
-    //     if(computeSize === 0){
-    //         computeSize = FIRST_CHUNK_SIZE;
-    //     }else if(computeSize + chunksNumber * UNIT_CHUNK_SIZE <= MAX_CHUNK_SIZE){
-    //         computeSize += chunksNumber * UNIT_CHUNK_SIZE;
-    //     }else if(computeSize + chunksNumber * UNIT_CHUNK_SIZE > MAX_CHUNK_SIZE){
-    //         computeSize += MAX_CHUNK_SIZE;
-    //     }
-    //     chunksNumber++
-    // }
-    // console.log(chunksNumber);
 
+    let uploadChunksNumber: number = chunksNumber;
     function loadChunks(preStart: number, preEnd: number){
-        // let start: number, end: number;
         if(currentChunk === 0){
             chunkStart = preStart;
             chunkEnd = (preEnd > inputFile.size) ? inputFile.size : preEnd;
@@ -124,7 +115,16 @@ function fileSplit(inputFile: any, uploadChunkList: upload_chunk_list,totalFileM
         
         if((!chunkUploadedFlag) || (uploadChunkList.fileStatus == 'notposted')){
             let chunkResult: chunk_result_item[] = chunkFileRead(e.target.result);
-            chunkFileUpload(chunkResult,totalFileMd5,currentChunkSparkMd5,chunksNumber)
+            // console.log(chunkResult);
+            // console.log(chunkResult.length);
+            // console.log(uploadChunksNumber);
+            chunkFileUpload(chunkResult, totalFileMd5, currentChunkSparkMd5, chunksNumber);
+            // if(chunkResult.length != 0){
+            //     chunkFileUpload(chunkResult,totalFileMd5,currentChunkSparkMd5,uploadChunksNumber);
+            // }else{
+            //     uploadChunksNumber--;
+            //     changeChunksNumber(uploadChunksNumber);
+            // }
         }
 
         if(currentChunk < chunksNumber - 1){

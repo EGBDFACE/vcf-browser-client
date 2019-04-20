@@ -3,7 +3,8 @@ import * as React from 'react';
 // import drawDemo from '../d3-SvgToWebgl/demo/chords.js'
 // const drawDemo = require('../d3-SvgToWebgl/demo/chords.js');
 import drawVepResultDiagram from '../assets/vep/drawVep.js';
-import * as vepData from '../assets/vep/vepData';
+import * as resData from '../assets/vep/vepData';
+
 const d3Queue = require('d3-queue');
 
 import line from '../assets/test/line.js';
@@ -25,6 +26,14 @@ export default class ChartDisplay extends React.Component<Props,States>{
         const { data,fileState } = this.props; 
         console.log('component update');
         if((data.length != 0)&&(fileState != 'PREPARE_TO_UPLOAD')){
+            console.log(data);
+            resData.getDetailData(data);
+            resData.getLayoutData().then(()=>{
+                console.log(resData.variant_data);
+                console.log(resData.metalr_rankscore_data);
+                console.log(resData.metasvm_rankscore_data);
+                drawVepResultDiagram();
+            })
             // console.log(data);
             // d3Queue.queue()
             //     .defer(vepData.get_all_variant_chrom,JSON.parse(data))
