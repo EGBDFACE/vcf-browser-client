@@ -2,7 +2,6 @@ import * as React from 'react';
 import '../index.scss';
 import { Grid,CellMeasurer,CellMeasurerCache } from 'react-virtualized';
 import { MeasuredCellParent } from 'react-virtualized/dist/es/CellMeasurer';
-import store from '../store/store';
 import { Column,Table } from 'react-virtualized';
 // import 'react-virtualized/style.css';
 // import '../../node_modules/react-virtualize/source/style.css';

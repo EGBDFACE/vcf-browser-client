@@ -1,7 +1,7 @@
 import TableFrame from '../components/TableFrame';
-import { StoreState } from '../store/store';
+import { StoreState } from '../store';
 import { connect } from 'react-redux';
-import * as actions from '../actions/action';
+import * as actions from '../actions';
 import { Dispatch } from 'react';
 
 function mapStateToProps(state:StoreState){

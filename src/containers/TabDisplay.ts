@@ -1,6 +1,6 @@
 import TabDisplay from '../components/TabDisplay';
-import * as React from '../actions/action';
-import { StoreState } from '../store/store';
+import * as React from '../actions';
+import { StoreState } from '../store';
 import { connect } from 'react-redux';
 import { Dispatch } from 'react';
 

@@ -1,0 +1,107 @@
+.sign__header{
+    text-align: center;
+    h1{
+        margin-left: 20px;
+        margin-top: 0;
+        display: inline-block;
+    }
+}
+.signIn__logo{
+    background-image: url('../images/signIn.png');
+    // position: absolute;
+    display: block;
+    width: 50px;
+    height: 50px;
+    background-size: cover;
+    margin: 30px auto;
+}
+.signUp__logo{
+    @extend .signIn__logo;
+    background-image: url('../images/signUp.png');
+}
+.sign__form{
+    border-radius: 5px;
+    border: 1px solid #d8dee2;
+    background-color: #fff;
+    font-size: 14px;
+    padding: 20px;
+    width: 290px;
+    margin: 0 auto;
+    label{
+        display: block;
+        margin-bottom: 7px;
+        font-weight: 600;
+    }
+}
+.form-control{
+    background-color: #fff;
+    border: 1px solid #d1d5da;
+    border-radius: 3px;
+    box-shadow: inset 0 1px 2px rgba(27,31,35,.075);
+    color: #24292e;
+    font-size: 16px;
+    line-height: 20px;
+    min-height: 34px;
+    outline: none;
+    padding: 6px 8px;
+    vertical-align: middle;
+    width: 100%;
+    margin-bottom: 15px;
+    margin-top: 5px;
+    box-sizing: border-box;
+}
+.form-submit{
+    margin-top: 20px;
+    display: block;
+    text-align: center;
+    width: 100%;
+    background-color:#d3394c;
+    color: #f1e5e6;
+    border: 1px solid rgba(27,31,35,.2);
+    border-radius: .25em;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 20px;
+    padding: 6px 12px;
+    position: relative;
+    box-sizing: border-box;
+}
+.form-unable-submit{
+    @extend .form-submit;
+    opacity: .5;
+    cursor: not-allowed;
+}
+.sign__help{
+    text-align: center;
+    margin: 20px auto;
+    border: 1px solid #d8dee2;
+    border-radius: 5px;
+    padding: 15px 20px;
+    width: 290px;
+    p{
+        display: inline;
+        margin-right: 8px;
+    }
+}
+.sign__error{
+    @extend .sign__help;
+    background-color: #ffdce0;
+    text-align: left;
+}
+.sign__error__delete{
+    background-image: url('../images/delete.png');
+    background-size: cover;
+    // display: inline-block;
+    margin-right: 20px;
+    width: 15px;
+    height: 15px;
+    float: right;
+    margin-top: 3px;
+    // vertical-align: middle;
+    opacity: .5;
+    cursor: pointer;
+    &:hover{
+        opacity: 1;
+    }
+}

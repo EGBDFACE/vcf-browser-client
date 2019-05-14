@@ -14,15 +14,164 @@ body{
     color: $content-color;
     background-color: $bg-color;
 }
-
+a{
+    text-decoration: none;
+}
 .header{
-   padding: 2em 1em 4em;
+//    padding: 2em 1em 4em;
    text-align: center; 
+//    max-width: 900px;
+   background-color: #fff;
+   box-shadow: 0 1px 3px rgba(26,26,26,.1);
+   padding: 1.25em 1.25em
 }
 
-.header h1{
-    font-size: 3em;
-    line-height: 1;
+.header__inner{
+    margin: 0 auto;
+    display: flex;
+    width: 900px;
+    height: 52px;
+    align-items: center;
+    padding: 0 16px;
+    h1{
+        margin: 0;
+        width: 7em;
+    }
+}
+
+
+
+.header__userInfo{
+    flex: 1 1;
+    justify-content: flex-end;
+    display: flex;
+    align-content: center;
+}
+.header__fileList{
+    position: relative;
+    display: inline-block;
+    margin-right: 40px;
+    background-image: url('./assets/images/fileList.png');
+    background-size: cover;
+    width: 20px;
+    height: 20px;
+    opacity: .5;
+    cursor: pointer;
+    &:hover{
+        opacity: 1;
+    }
+}
+.header__fileList__content{
+    position: absolute;
+    width: 300px;
+    padding: 0;
+    margin-top: 35px;
+    margin-left: 40px;
+    background-color: #fff;
+    border: 1px solid #ebebeb;
+    border-radius: 4px;
+    box-shadow: 0 5px 20px rgba(26,26,26,.1);
+}
+.fileList__content__header{
+    border-bottom: 1px solid #ebebeb;
+    padding: 10px;
+    margin: 0;
+}
+.fileList__content__arrow{
+    position: absolute;
+    overflow: hidden;
+    width: 32px;
+    height: 16px;
+    transform: translate(-50%,-100%);
+    &::after{
+        content: '';
+        position: absolute;
+        box-sizing: border-box;
+        width: 24px;
+        height: 24px;
+        margin: -12px;
+        border: 1px solid #ebebeb;
+        background: #fff;
+        transform: rotate(45deg);
+        left: 50%;
+        bottom: -8px
+    }
+}
+.fileList__content__list{
+    max-height: 200px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding: 0;
+    margin: 0;
+}
+.fileList__content__list__item{
+    position: relative;
+    padding: 15px;
+    cursor: pointer;
+    &:hover{
+        background-color: #f6f6f6;
+    }
+}
+.header__profile{
+    position: relative;
+}
+.header__profile__icon{
+    @extend .header__fileList;
+    background-image: url('./assets/images/userPic.png');
+}
+.header__profile__menu{
+    @extend .header__fileList__content;
+    width: 100px;
+    margin-top: 8px;
+    margin-left: -42px;
+}
+.header__profile__menu__arrow{
+    @extend .fileList__content__arrow;
+}
+.header__profile__menu__quit{
+    cursor: pointer;
+    margin: 0;
+    padding: 10px;
+    &:hover{
+        background-color: #f6f6f6;
+    }
+}
+@mixin buttonCommon{
+    display: inline-block;
+    padding: 0 16px;
+    font-size: 14px;
+    line-height: 32px;
+    text-align: center;
+    cursor: pointer;
+    background: none;
+    border: 1px solid;
+    border-radius: 3px;
+    color: #8590a6;
+    outline: none;
+    text-decoration: none;
+}
+@mixin buttonBlue{
+    color: #0084ff;
+    border-color: #0084ff;
+}
+
+.button__login{
+    @include buttonCommon();
+    @include buttonBlue();
+    margin-right: 16px;
+    &:hover{
+        background-color: rgba(0,132,255,.06);
+    }
+}
+.button__primary{
+    @include buttonCommon();
+    @include buttonBlue();
+    color: #fff;
+    background-color: #0084ff;
+    &:hover{
+        border-color: #0077e6;
+        background-color: #0077e6;
+    }
 }
 
 .fileUpload{
@@ -31,6 +180,8 @@ body{
     margin: 20px auto;
     // background-color: $iFile-bg-color;
     border-radius: 4px;
+    text-align: center;
+    background-color: #fff;
 }
 
 @mixin fileUploadClassCommon{
@@ -158,3 +309,45 @@ body{
     width: 20px;
     height: 20px;
 }
+.loadingPage{
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    display: block;
+    background: rgba(0,0,0,0.4);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.sk-rotating-plane {
+    width: 40px;
+    height: 40px;
+    background-color: #333;
+    margin: 40px auto;
+    -webkit-animation: sk-rotatePlane 1.2s infinite ease-in-out;
+            animation: sk-rotatePlane 1.2s infinite ease-in-out; }
+  
+  @-webkit-keyframes sk-rotatePlane {
+    0% {
+      -webkit-transform: perspective(120px) rotateX(0deg) rotateY(0deg);
+              transform: perspective(120px) rotateX(0deg) rotateY(0deg); }
+    50% {
+      -webkit-transform: perspective(120px) rotateX(-180.1deg) rotateY(0deg);
+              transform: perspective(120px) rotateX(-180.1deg) rotateY(0deg); }
+    100% {
+      -webkit-transform: perspective(120px) rotateX(-180deg) rotateY(-179.9deg);
+              transform: perspective(120px) rotateX(-180deg) rotateY(-179.9deg); } }
+  
+  @keyframes sk-rotatePlane {
+    0% {
+      -webkit-transform: perspective(120px) rotateX(0deg) rotateY(0deg);
+              transform: perspective(120px) rotateX(0deg) rotateY(0deg); }
+    50% {
+      -webkit-transform: perspective(120px) rotateX(-180.1deg) rotateY(0deg);
+              transform: perspective(120px) rotateX(-180.1deg) rotateY(0deg); }
+    100% {
+      -webkit-transform: perspective(120px) rotateX(-180deg) rotateY(-179.9deg);
+              transform: perspective(120px) rotateX(-180deg) rotateY(-179.9deg); } }

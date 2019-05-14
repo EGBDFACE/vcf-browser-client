@@ -1,5 +1,5 @@
-import * as actions from '../actions/action';
-import { StoreState } from '../store/store';
+import * as actions from '../actions';
+import { StoreState } from '../store';
 import { connect } from 'react-redux';
 import { Dispatch } from 'react';
 import ChartDisplay from '../components/ChartDisplay';

@@ -1,5 +1,5 @@
 import FileProgress from '../components/FileProgress';
-import { StoreState } from '../store/store';
+import { StoreState } from '../store';
 import { connect } from 'react-redux';
 
 function mapStateToProps(state:StoreState){

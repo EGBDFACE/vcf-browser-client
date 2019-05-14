@@ -1,5 +1,6 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 
 module.exports = {
     mode: 'development',
@@ -16,7 +17,11 @@ module.exports = {
     // devtool: 'cheap-module-eval-source-map', //dev
     // devtool:'cheap-module-source-map', //prod 
     resolve:{
-        extensions:['.ts','.tsx','.js','.json']
+        extensions:['.ts','.tsx','.js','.json'],
+        alias: {
+            '@': path.resolve(__dirname,'src/')
+        },
+        plugins: [new TsconfigPathsPlugin()]
     },
     module:{
         rules:[
@@ -77,3 +82,4 @@ module.exports = {
         })
     ]
 }
+
