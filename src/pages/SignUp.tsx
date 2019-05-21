@@ -1,5 +1,5 @@
 import * as React from 'react';
-import '@/assets/css/sign.scss';
+import '@/css/sign.scss';
 import axios from 'axios';
 import { BASE_URL } from '../constant';
 import store, { userInfo } from '../store';
@@ -7,6 +7,8 @@ import * as actions from '../actions';
 import SignError from '../components/SignError';
 // import { withRouter } from 'react-router-dom';
 import history from '../router/history';
+
+const bcrypt = require('bcryptjs');
 
 interface Props{}
 interface States{
@@ -75,36 +77,73 @@ export default class SignUp extends React.Component<Props,States>{
     }
 
     signUp(){
-        let signInfo = {
-            name: this.state.name,
-            password: this.state.password
-        };
+        // let signInfo = {
+        //     name: this.state.name,
+        //     password: this.state.password
+        // };
 
         this.setState({
             ableToSubmit: false
         });
 
+        // axios({
+        //     method: 'post',
+        //     baseURL: BASE_URL,
+        //     url: '/signUp',
+        //     data: signInfo
+        // }).then( res =>{
+        //     console.log(res);
+        //     if(res.data === 'SIGN_UP_SUCCESS'){
+        //         // const history = createBrowserHistory();
+        //         // history.push('/');
+        //         store.dispatch(actions.userSignIn(signInfo.name,[]));
+        //         history.push('/');
+        //     }else{
+        //         this.setState({
+        //             errorMessage: res.data.replace(/_/g,' ').toLowerCase(),
+        //             ableToSubmit: true
+        //         });
+        //     }
+        // }).catch( err => {
+        //     console.error(err.message);
+        // });
+        let getSaltData = {
+            name: this.state.name
+        };
         axios({
             method: 'post',
             baseURL: BASE_URL,
-            url: '/signUp',
-            data: signInfo
-        }).then( res =>{
+            url: '/getSalt',
+            data: getSaltData
+        }).then( res => {
             console.log(res);
-            if(res.data === 'SIGN_UP_SUCCESS'){
-                // const history = createBrowserHistory();
-                // history.push('/');
-                store.dispatch(actions.userSignIn(signInfo.name,[]));
-                history.push('/');
-            }else{
-                this.setState({
-                    errorMessage: res.data.replace(/_/g,' ').toLowerCase(),
-                    ableToSubmit: true
-                });
-            }
+            let salt: string = res.data;
+            let password: string = bcrypt.hashSync(this.state.password, salt);
+            let userInfo = {
+                name: this.state.name,
+                password: password
+            };
+            axios({
+                method: 'post',
+                baseURL: BASE_URL,
+                url: '/signUp',
+                data: userInfo
+            }).then( res => {
+                console.log(res);
+                if( res.data === 'SIGN_UP_SUCCESS'){
+                    history.push('/signIn');
+                }else{
+                    this.setState({
+                        errorMessage: res.data.replace(/_/g, ' ').toLowerCase(),
+                        ableToSubmit: true
+                    });
+                }
+            }).catch( err => {
+                console.error(err.message);
+            })
         }).catch( err => {
             console.error(err.message);
-        });
+        })
 
     }
     

@@ -6,12 +6,17 @@ import { Dispatch } from 'react';
 
 function mapStateToProps (state: StoreState){
     return{
-        name: state.userInfo.name,
-        fileList: state.userInfo.fileList
+        UserName: state.userInfo.name,
+        UserFileList: state.userInfo.fileList,
+        totalFileTable: state.fileUpload.totalFile,
+        // fileProgressPercent: state.fileUpload.fileStatusPercent,
+        fileUploadProgressPercent: state.fileUpload.fileUploadPercent,
+        fileLoadProgressPercent: state.fileUpload.fileLoadPercent,
+        fileResultFromServer: state.fileReceive.data
     }
 }
 
-function mapDispatchToProps (dispatch: Dispatch<actions.AllAction>){
+function mapDispatchToProps (dispatch: Dispatch<any>){
     return{
         signOut: () => dispatch(actions.userSignOut()),
         userGetFile: (obj:fileReceive) => dispatch(actions.VEPFileReceive(obj))

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import '@/assets/css/sign.scss';
+import '@/css/sign.scss';
 
 interface Props{
     message: string

@@ -1,9 +1,9 @@
 import * as React from 'react';
-import '../index.scss';
+import '@/css/index.scss';
 
 interface Props{
-    fileStatus: string;
-    fileStatusPercent: number;
+    // fileStatusPercent: number;
+    percent: number;
 }
 interface States{
 }
@@ -13,22 +13,17 @@ export default class FileProgress extends React.Component<Props,States>{
         super(props);
     }
     render(){
-        const {fileStatus,fileStatusPercent} = this.props;
+        // const {fileStatusPercent} = this.props;
+        const percent = this.props.percent;
         let progressBarStyle = {
-            width: fileStatusPercent+'%'
+            width: percent+'%'
         }
-        if(fileStatus === 'UPLOADING'){
-            return(
-                <div className='fileProgress'>
-                    <div className='fileProgressBar' style={progressBarStyle}>
-                        <div className='fileProgressValue'>{fileStatusPercent}%</div>
-                    </div>
+        return(
+            <div className='fileProgress'>
+                <div className='fileProgressBar' style={progressBarStyle}>
+                    <div className='fileProgressValue'>{percent}%</div>
                 </div>
-            )
-        }else{
-            return(
-                null
-            )
-        }
+            </div>
+        )
     }
 }

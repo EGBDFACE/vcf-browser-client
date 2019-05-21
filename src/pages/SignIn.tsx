@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import '@/assets/css/sign.scss'
+import '@/css/sign.scss'
 import axios from 'axios';
 import { BASE_URL } from '../constant';
 import { userInfo } from '../store';
@@ -8,6 +8,9 @@ import store from '../store';
 import * as actions from '../actions';
 import SignError from '../components/SignError';
 import history from '../router/history';
+// import * as bcrypt from 'bcrypt';
+const bcrypt = require('bcryptjs');
+const jsSHA = require('jssha');
 
 interface Props{}
 interface States{
@@ -27,6 +30,14 @@ export default class SignIn extends React.Component<Props,States>{
             errorMessage: ''
         }
     }
+
+    // componentDidMount(){
+    //     let saltRounds = 10;
+    //     for(let i=0;i<10;i++){
+    //         let temp = bcrypt.genSaltSync(saltRounds);
+    //         console.log(temp);
+    //     }
+    // }
 
     nameInput(value:string){
         this.setState({
@@ -67,34 +78,54 @@ export default class SignIn extends React.Component<Props,States>{
         this.setState({
             ableToSubmit: false
         });
-
+        let getSaltData = {
+            name: this.state.name
+        };
         axios({
             method: 'post',
             baseURL: BASE_URL,
-            url: '/signIn',
-            data: signInfo
+            url: '/getSalt',
+            data: getSaltData
         }).then( res => {
             console.log(res);
-            if(typeof res.data === 'string'){
-                this.setState({
-                    errorMessage: res.data.replace(/_/g,' ').toLowerCase(),
-                    ableToSubmit: true
-                });
-            }else{
-                this.setState({
-                    errorMessage: ''
-                });
-                let userInfo:userInfo = {
-                    name: res.data.name,
-                    id: res.data.id,
-                    fileList: res.data.fileList?res.data.fileList:[]
+            let salt: string = res.data;
+            let nowTime: string = Math.floor(new Date().getTime()/60000).toString();
+            let passwordS: string = bcrypt.hashSync(this.state.password, salt);
+            console.log(passwordS);
+            // let passwordST: string = bcrypt.hashSync(nowTime, passwordS);
+            // console.log(passwordST);
+            let shaObj = new jsSHA('SHA-512','TEXT');
+            shaObj.update(passwordS);
+            shaObj.update(nowTime);
+            let passwordST: string = shaObj.getHash('HEX');
+            console.log(passwordST);
+            let userInfo = {
+                name: this.state.name,
+                password: passwordST
+            };
+            axios({
+                method: 'post',
+                baseURL: BASE_URL,
+                url: '/signIn',
+                data: userInfo
+            }).then( res => {
+                console.log(res);
+                if(typeof res.data === 'string'){
+                    this.setState({
+                        errorMessage: 'incorrect username or password',
+                        ableToSubmit: true
+                    });
+                }else{
+                    this.setState({
+                        errorMessage: ''
+                    });
+                    store.dispatch(actions.userSignIn(res.data.name, res.data.fileList));
+                    history.push('/');
                 }
-                store.dispatch(actions.userSignIn(userInfo.name,userInfo.fileList));
-                history.push('/');
-            }
+            })
         }).catch( err => {
             console.error(err.message);
-        });
+        })
 
     }
     

@@ -60,14 +60,14 @@ export default function fileHandle(inputFile: any){
                 uploadedChunkList: response.data.uploadedChunkList
             };
             if(uploadedData.fileStatus == 'notPosted'){
-                store.dispatch(actions.FileUploadProgress(0,'Uploading'));
+                store.dispatch(actions.FileUploadProgress(0));
                 fileSplit(inputFile,uploadedData,totalFileMd5);
             }else if(uploadedData.fileStatus == 'posting'){
-                store.dispatch(actions.FileUploadProgress(Math.round((uploadedData.uploadedChunkList.length / chunksNumber) * 100),'Uploading'));
+                store.dispatch(actions.FileUploadProgress(Math.round((uploadedData.uploadedChunkList.length / chunksNumber) * 100)));
                 fileSplit(inputFile,uploadedData,totalFileMd5);
             }else{
-                store.dispatch(actions.FileUploadProgress(100,'Uploaded!'));
-                store.dispatch(actions.UploadStatusChange());
+                store.dispatch(actions.FileUploadProgress(100));
+                // store.dispatch(actions.UploadStatusChange());
             }
             if((response.data.uploadedChunkData)&&(response.data.uploadedChunkData.length != 0)){
                 store.dispatch(actions.VEPFileReceive({data: response.data.uploadedChunkData, fileMd5: response.data.fileMd5}));
@@ -80,7 +80,7 @@ export default function fileHandle(inputFile: any){
     totalFileReader.onprogress = evt =>{
         if(evt.lengthComputable){
             let percentLoaded = Math.round(( evt.loaded / evt.total ) * 100);
-            store.dispatch( actions.FileUploadProgress( percentLoaded , 'Loading...' ));
+            store.dispatch( actions.FileLoadProgress( percentLoaded ));
         }
     }
 

@@ -1,3 +1,6 @@
+import store from "../../store";
+import * as actions from '../../actions';
+
 export interface chunk_result_item{
     CHROM: string,
     POS: string,
@@ -10,29 +13,47 @@ export interface chunk_result_item{
 }
 
 let preChunkEndLine:string = '';
+let indexInTable:number = 0;
 
 export function chunkFileRead(chunkString:string):chunk_result_item[]{
    let chunkArray = chunkString.split('\n');
    let chunkResult:chunk_result_item[] = []; 
+   let chunkDataToDisplay: string[][] = [];
 
    for(let i=0; i<chunkArray.length; i++){
        let item = chunkArray[i];
        if((i === 0)&&(preChunkEndLine)){
-           if(isCompleteLine(item)){
+           if(isCompleteLine(item) && isCompleteLine(preChunkEndLine)){
                chunkResult.push(dealLine(preChunkEndLine));
                chunkResult.push(dealLine(item));
+               chunkDataToDisplay.push(dealLineToDisplay(preChunkEndLine,indexInTable++));
+               chunkDataToDisplay.push(dealLineToDisplay(item,indexInTable++));
            }else if(isCompleteLine(preChunkEndLine + item)){
                chunkResult.push(dealLine(preChunkEndLine+item));
+               chunkDataToDisplay.push(dealLineToDisplay(preChunkEndLine+item,indexInTable++));
            }
        }else if(i === chunkArray.length-1){
            preChunkEndLine = item;
        }else if(isCompleteLine(item)){
            chunkResult.push(dealLine(item));
+           chunkDataToDisplay.push(dealLineToDisplay(item,indexInTable++));
        }
    }
+   store.dispatch(actions.FileTabDisplay(chunkDataToDisplay));
    return chunkResult;
 }
 
+function dealLineToDisplay(v:string,index:number){
+    let tmp = v.split('\t');
+    let arr_display: string[] = [];
+
+    arr_display[0] = index.toString();
+    for(let i=0; i< 8; i++){
+        arr_display[i+1] = tmp[i];
+    }
+    
+    return arr_display;
+}
 function dealLine(v:string){
     let tmp = v.split('\t');
     let obj_upload = {
@@ -45,7 +66,7 @@ function dealLine(v:string){
         FILTER: '.',
         INFO: '.'
     };
-    
+
     let indexINS = tmp[4].indexOf('<INS>');
     let indexDEL = tmp[4].indexOf('<DEL>');
     let indexDUP = tmp[4].indexOf('<DUP>');

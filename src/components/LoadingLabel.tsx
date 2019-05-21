@@ -1,8 +1,8 @@
 import * as React from 'react';
-import '../index.scss';
+import '@/css/index.scss';
 import * as PIXI from 'pixi.js';
 // import loadingPNF from '../images/loading.png';
-const loadingPNG = require('@/assets/images/loading.png');
+const loadingPNG = require('@/css/img/loading.png');
 
 interface Props{
 

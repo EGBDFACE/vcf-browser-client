@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Loadable from 'react-loadable';
 import store from '../store';
-import '@/index.scss';
+import '@/css/index.scss';
 import Home from '../containers/HomePage';
 // import {Route,BrowserRouter as Router} from 'react-router-dom';
 // import { Route, HashRouter as Router } from 'react-router-dom';

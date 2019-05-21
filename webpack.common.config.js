@@ -80,6 +80,17 @@ module.exports = {
         new HtmlWebpackPlugin({
             template: '!!ejs-loader!./template.html'
         })
-    ]
+    ],
+    // node:{
+    //     fs: "empty",
+    //     child_process: "empty",
+    //     net: "empty",
+    //     // aws-sdk: "emtry",
+    //     tls: "empty"
+    // },
+    // externals:{
+    //     "node-hid": 'commonjs node-hid',
+    //     "usb": 'commonjs usb'
+    // }
 }
 

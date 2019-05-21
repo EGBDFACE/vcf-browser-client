@@ -51,7 +51,7 @@ a{
     position: relative;
     display: inline-block;
     margin-right: 40px;
-    background-image: url('./assets/images/fileList.png');
+    background-image: url('./img/fileList.png');
     background-size: cover;
     width: 20px;
     height: 20px;
@@ -117,7 +117,7 @@ a{
 }
 .header__profile__icon{
     @extend .header__fileList;
-    background-image: url('./assets/images/userPic.png');
+    background-image: url('./img/userPic.png');
 }
 .header__profile__menu{
     @extend .header__fileList__content;
@@ -302,7 +302,8 @@ a{
 .chartDisplay{
     @extend .fileUpload;
     // max-width: 900px;
-    max-width: 100%;
+    // max-width: 100%;
+    max-height: 900px;
     overflow: hidden;
 }
 #loadingLabel > canvas{
