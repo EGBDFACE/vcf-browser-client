@@ -2,7 +2,8 @@ import * as React from 'react';
 import '../css/ReactTable.scss';
 
 interface Props{
-    totalFile: string[][]
+    totalFile: string[][],
+    tableHeaders: string[]
 }
 interface States{
     currentPageNumber: number;
@@ -90,14 +91,14 @@ export default class TableFrame extends React.Component<Props,States>{
         });
     }
     render(){
-        const content= ['Row Index','CHROM','POS','ID','REF','ALT','QUAL','FILTER','INFO'];
+        // const content= ['Row Index','CHROM','POS','ID','REF','ALT','QUAL','FILTER','INFO'];
+        const content = this.props.tableHeaders;
         const totalFile = this.props.totalFile;
         const { currentPageNumber, singlePageDisplayNumber, totalPageNumber, inputPageNumber } = this.state;
         const currentArray:string[][] = totalFile.slice((currentPageNumber-1)*singlePageDisplayNumber,currentPageNumber*singlePageDisplayNumber+1);
         if(totalFile.length != 0){
             return(
-                <div className='TableDisplay'>
-                    <div className='tableArea'>
+                <div className='tableArea'>
                     <div className='tableHeader'>
                         {content.map((value,index)=>this.renderHeaderCell(index,value))}
                     </div>
@@ -107,7 +108,7 @@ export default class TableFrame extends React.Component<Props,States>{
                         {( currentPageNumber >= totalPageNumber ) ? <span className='tableBtDisable'>Next</span> : <button onClick={() => this.Next()}>Next</button>}
                         <span>Page<strong> {currentPageNumber} of {totalPageNumber} </strong></span>
                         <span>| Go to page : <input type='number' value={inputPageNumber} onChange={(e) => this.InputPage( +e.target.value )}></input></span>
-                        <select onChange={(e) => this.SinglePage( +e.target.value )}>
+                        <select onChange={(e) => this.SinglePage( +e.target.value )} className='tableFooter__singlePageNumber'>
                             <option value='10'>Show 10</option>
                             <option value='20'>Show 20</option>
                             <option value='30'>Show 30</option>
@@ -115,8 +116,7 @@ export default class TableFrame extends React.Component<Props,States>{
                             <option value='50'>Show 50</option>
                         </select>
                     </div>
-                 </div>
-                </div> 
+                </div>
             )
         }else{
             return null;

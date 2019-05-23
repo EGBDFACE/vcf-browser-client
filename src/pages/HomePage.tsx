@@ -9,6 +9,7 @@ import { fileReceive } from '../store';
 import LoadingLabel from '../components/LoadingLabel';
 import fileHandle from '../utils/fileHandle';
 import FileProgress from '../components/FileProgress';
+import FilterBar from '../components/FilterBar';
 
 interface fileListItem{
     fileName: string,
@@ -191,6 +192,7 @@ export default class Home extends React.Component<Props,States>{
     }
     render(){
         const { UserName, UserFileList, signOut, totalFileTable } = this.props;
+        const vcfTableHeaders= ['Row Index','CHROM','POS','ID','REF','ALT','QUAL','FILTER','INFO'];
         const temp:string[][] = [];
         for(let i=0;i< 500; i++){
             temp[i] = [];
@@ -235,7 +237,13 @@ export default class Home extends React.Component<Props,States>{
                     {this.renderFileProgress()}
                  </div>
                 {/* <Hello nameadd='sra'/> */}
-                <TableFrame totalFile={totalFileTable} />
+                <div className='TableDisplay'>
+                    <FilterBar filterHeaders={vcfTableHeaders.slice(1)}
+                        />
+                    <TableFrame totalFile={temp} 
+                        tableHeaders={vcfTableHeaders}
+                        />
+                </div>
                 {/* <ChartDisplay/> */}
             </div>
         );

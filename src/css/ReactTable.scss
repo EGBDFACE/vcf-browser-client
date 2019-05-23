@@ -7,6 +7,7 @@
     border-radius: 5px;
     border: solid 1px #ddd;
     overflow: scroll;
+    // margin-top: 10px;
 }
 .tableHeader{
     display: flex;
@@ -56,18 +57,19 @@
     border-radius: 5px;
     border: 1px solid rgba(0,0,0,0.2);
     max-width: 80%;
+    // max-width: 50px;
 }
 .tableFooter > span > input::-webkit-outer-spin-button,
 .tableFooter > span > input::-webkit-inner-spin-button{
     -webkit-appearance: none;
 } 
-.tableFooter > select{
+.tableFooter__singlePageNumber{
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
+    // margin-right: 5px;
     background: white;
     border: 0;
-    margin: 0;
     color: black;
     font-size: 1rem;
     border-radius: 5px;
