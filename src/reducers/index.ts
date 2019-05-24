@@ -59,21 +59,36 @@ function fileUpload(state:fileUpload,action: FileUpload){
 function fileReceiveFunc(state:fileReceive,action:VEPFileReceive){
     switch(action.type){
         case 'VEP_RESULT_NOTPOSTED_CHANGE':
-            if(action.fileMd5 === state.fileMd5){
-                return{
-                    ...state,
-                    data: state.data.concat(action.data)
-                }
-            }else{
-                return{
-                    fileMd5: action.fileMd5,
-                    data: action.data
+            if(action.chunkResult.data.length != 0){
+                if(action.fileMd5 === state.fileMd5){
+                    return{
+                        ...state,
+                        // data: state.data.concat(action.data)
+                        chunksResultData: state.chunksResultData.concat([action.chunkResult]),
+                        chunksResultDataTotal: state.chunksResultDataTotal.concat(action.chunkResult.data)
+                    }
+                }else{
+                    return{
+                        fileMd5: action.fileMd5,
+                        // data: action.data
+                        chunksResultData: [action.chunkResult],
+                        chunksResultDataTotal: action.chunkResult.data
+                    }
                 }
             }
+            
         case 'VEP_FILE_INPUT_CHANGE':
             return{
                 ...state,
-                data: []
+                // data: []
+                chunksResultData: [],
+                chunksResultDataTotal: []
+            }
+        case 'VEP_RESULT_CHANGE_FROM_PULLCHUNKLIST':
+            return{
+                ...state,
+                fileMd5: action.fileMd5,
+                chunksResultDataTotal: action.chunksResult
             }
         default: return state
     }

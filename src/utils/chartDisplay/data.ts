@@ -71,12 +71,12 @@ export function getData(data: any){
 
     geneData = detail.gene;
 
-    console.log(temp);
-    console.log(layoutData);
-    console.log(variantData);
-    console.log(geneData);
-    console.log(metalrData);
-    console.log(metasvmData);
+    // console.log(temp);
+    // console.log(layoutData);
+    // console.log(variantData);
+    // console.log(geneData);
+    // console.log(metalrData);
+    // console.log(metasvmData);
     
     let returnObj:I_VEPData = {
         layoutData: layoutData,
@@ -140,7 +140,7 @@ function GenerateRelativePosition(value: any){
 }
 
 function getDetailData(value:any){
-    console.log('run get data ');
+    // console.log('run get data ');
     let variantData: item_variant_score[] = [],
         metalrData: item_variant_score[] = [],
         layoutData: item_layout[] = [],

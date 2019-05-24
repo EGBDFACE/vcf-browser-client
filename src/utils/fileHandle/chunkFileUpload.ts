@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { BASE_URL } from '../../constant';
 import { chunk_result_item } from './chunkFileRead';
-import store from '../../store';
+import store, { chunkResult } from '../../store';
 import * as actions from '../../actions';
 
 interface chunk{
@@ -30,16 +30,25 @@ export function chunkFileUpload(item: chunk_result_item[], fileMd5: string, chun
         data: chunkData
     }).then(res => {
         console.log(res);
-        // console.log(res.data)
+        console.log(res.data)
         // console.log(`Math.round ${Math.round((res.data.uploadedChunkList.length / chunksNumber) * 100)}`);
         if(res.data.uploadedChunkList.length === chunksNumber){
             store.dispatch(actions.FileUploadProgress(100));
         }else{
             store.dispatch(actions.FileUploadProgress(Math.round((res.data.uploadedChunkList.length / chunksNumber) * 100)));
         }
-        if(res.data.chunkResult.length != 0){
-            store.dispatch(actions.VEPFileReceive({data: res.data.chunkResult, fileMd5: res.data.fileMd5}));
+        // if(res.data.chunkResult.length != 0){
+        //     store.dispatch(actions.VEPFileReceive({data: res.data.chunkResult, fileMd5: res.data.fileMd5}));
+        // }
+        let chunkResult: chunkResult = {
+            data: res.data.chunkResult,
+            chunkMd5: res.data.chunkMd5,
+            chunkNumber: res.data.chunkNumber
         }
+        store.dispatch(actions.VEPFileReceive({
+            chunkResult: chunkResult,
+            fileMd5: res.data.fileMd5
+        }))
         // store.dispatch(actions.VEPFileReceive({data: res.data.data, fileMd5: res.data.fileMd5}));
     }).catch(err => {
         console.error(err.message);

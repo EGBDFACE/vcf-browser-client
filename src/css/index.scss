@@ -304,6 +304,21 @@ a{
     max-height: 900px;
     overflow: hidden;
 }
+.chartDisplay__chunkLabel{
+    display: inline-block;
+    border-radius: 10px;
+    position: relative;
+    padding: 10px;
+    margin: 8px 5px;
+    color: white;
+    background-color: #d3394c;
+    cursor: pointer;
+}
+.chartDisplay__chunkLabel__selected{
+    @extend .chartDisplay__chunkLabel;
+    opacity: .5;
+    cursor: not-allowed;
+}
 #loadingLabel > canvas{
     width: 20px;
     height: 20px;

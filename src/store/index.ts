@@ -6,9 +6,16 @@ export interface fileUpload{
     fileUploadPercent: number,
     totalFile: string[][]
 }
+export interface chunkResult {
+    data: any[],
+    chunkMd5: string,
+    chunkNumber: number
+}
 export interface fileReceive{
     fileMd5: string,
-    data: any[]
+    chunksResultData: chunkResult[]
+    // data: any[]
+    chunksResultDataTotal: any[]
 }
 export interface userInfo{
     name: string,
@@ -32,7 +39,9 @@ export const initialState:StoreState = {
     },
     fileReceive: {
         fileMd5: '',
-        data: []
+        chunksResultData: [],
+        // data: []
+        chunksResultDataTotal: []
     },
     userInfo: {
         name: '',

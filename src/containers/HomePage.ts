@@ -12,14 +12,16 @@ function mapStateToProps (state: StoreState){
         // fileProgressPercent: state.fileUpload.fileStatusPercent,
         fileUploadProgressPercent: state.fileUpload.fileUploadPercent,
         fileLoadProgressPercent: state.fileUpload.fileLoadPercent,
-        fileResultFromServer: state.fileReceive.data
+        // fileResultFromServer: state.fileReceive.data
+        chunksResultData: state.fileReceive.chunksResultData,
+        chunksResultDataTotal: state.fileReceive.chunksResultDataTotal
     }
 }
 
 function mapDispatchToProps (dispatch: Dispatch<any>){
     return{
         signOut: () => dispatch(actions.userSignOut()),
-        userGetFile: (obj:fileReceive) => dispatch(actions.VEPFileReceive(obj))
+        userGetFile: (obj:fileReceive) => dispatch(actions.VEPFileChangeFromPullChunkList(obj))
     }
 }
 

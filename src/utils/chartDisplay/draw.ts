@@ -4,12 +4,39 @@ import { getData, item_gene, item_layout, item_variant_score, I_VEPData } from '
 
 
 export default function draw(data: any){
+    let blank = document.createElement('canvas');
+    blank.width = 800;
+    blank.height = 800;
+    if(document.getElementsByTagName('canvas').length != 0 ){
+        for(let i=0 ; i<document.getElementsByTagName('canvas').length; i++){
+            document.getElementsByTagName('canvas')[i].remove();
+        }
+    }
+    document.getElementsByClassName('canvasElement')[0].appendChild(blank);
+
     let canvas = document.getElementsByTagName('canvas')[0];
+    
+    // let blank = document.createElement('canvas');
+    // blank.width = canvas.width;
+    // blank.height  = canvas.height;
+    // if(blank.toDataURL() === canvas.toDataURL()){
+    //     console.log('canvas blank');
+    // }
+    //clearCanvas
+    // console.log('clearCanvas');
+    // console.log(data);
+    // let gl = canvas.getContext('webgl');
+    // // context.clearRect(0,0,canvas.width,canvas.height);
+    // gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
+    // gl.clearColor(0.0, 0.5, 0.0, 1.0);
+    // gl.clear(gl.COLOR_BUFFER_BIT);
+    
     canvas.width = document.body.clientWidth;
     canvas.height = document.body.clientHeight;
     
     let vepData:I_VEPData = getData(data);
-
+    // console.log(vepData);
+    
     new VEPCircularRender(document.getElementsByTagName('canvas')[0],{
         bgColor: 0xf1e5e6
     }).drawVEP(vepData);

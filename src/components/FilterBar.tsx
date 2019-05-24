@@ -8,6 +8,7 @@ interface Requirement{
 }
 interface Props{
     filterHeaders: string[],
+    filtersChange: (requirements: Requirement[]) => void
 }
 interface States{
     requirementValue: string,
@@ -74,7 +75,8 @@ export default class FilterBar extends React.Component<Props,States>{
     }
     requirementLabelChange(value: string){
         this.setState({
-            requirementLabel: value
+            requirementLabel: value,
+            requirementValue: ''
         })
     }
     requirementDelete(index: number){
@@ -83,7 +85,8 @@ export default class FilterBar extends React.Component<Props,States>{
         this.setState({
             requirements: newRequirements,
             // requirementDeleteFlag: false
-        })
+        });
+        this.props.filtersChange(newRequirements);
     }
     requirementAdd(){
         const newRequirement:Requirement = {
@@ -91,29 +94,35 @@ export default class FilterBar extends React.Component<Props,States>{
             value: this.state.requirementValue,
             deleteFlag: false
         }
-        const requirements = this.state.requirements;
+        let requirements = this.state.requirements;
         let existFlag: boolean = false;
         for(let i = 0;i < requirements.length; i++){
             if(requirements[i].label === newRequirement.label){
                 existFlag = true;
                 requirements[i].value = newRequirement.value;
-                this.setState({
-                    requirements: requirements
-                });
+                // this.setState({
+                //     requirements: requirements
+                // });
                 break;
             }
         }
         if(!existFlag){
-            this.setState({
-                requirements: this.state.requirements.concat([newRequirement])
-            })
+            requirements.push(newRequirement);
+            // this.setState({
+            //     requirements: this.state.requirements.concat([newRequirement])
+            // })
         }
+        this.setState({
+            requirements: requirements
+        });
+        this.props.filtersChange(requirements);
     }
     allRequirementsClear(){
         this.setState({
             requirements: [],
             requirementValue: ''
         })
+        this.props.filtersChange([]);
     }
     render(){
         const { filterHeaders } = this.props;

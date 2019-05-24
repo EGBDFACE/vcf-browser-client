@@ -1,3 +1,5 @@
+import { chunkResult } from "../store";
+
 export interface FileProgress{
     type: string;
     percent: number;
@@ -10,9 +12,11 @@ export interface FileUpload extends FileProgress,FileTable{}
 
 export interface VEPFileReceive{
     type?: string,
-    data: any[],
+    // data: any[],
+    chunkResult: chunkResult
     // chunkMd5: string,
     fileMd5: string
+    chunksResult?: any[]
 }
 export interface userInfoAction{
     type: string,
@@ -33,6 +37,7 @@ const VEP_FILE_INPUT_CHANGE = 'VEP_FILE_INPUT_CHANGE';
 const USER_SIGN_IN = 'USER_SIGN_IN';
 const USER_SIGN_OUT = 'USER_SIGN_OUT';
 const USER_FILELIST_UPDATE = 'USER_FILELIST_UPDATE';
+const VEP_RESULT_CHANGE_FROM_PULLCHUNKLIST = 'VEP_RESULT_CHANGE_FROM_PULLCHUNKLIST';
 
 export function FileUploadProgress(percent:number): FileProgress{
     return {
@@ -57,7 +62,15 @@ export function VEPFileReceive(responseFile:VEPFileReceive):VEPFileReceive{
         type: VEP_RESULT_NOTPOSTED_CHANGE,
         fileMd5: responseFile.fileMd5,
         // chunkMd5: responseFile.chunkMd5,
-        data: responseFile.data
+        // data: responseFile.data
+        chunkResult: responseFile.chunkResult
+    }
+}
+export function VEPFileChangeFromPullChunkList(data:any){
+    return{
+        type: VEP_RESULT_CHANGE_FROM_PULLCHUNKLIST,
+        fileMd5: data.fileMd5,
+        chunksResult: data.chunksResult
     }
 }
 export function InputFileChange(){

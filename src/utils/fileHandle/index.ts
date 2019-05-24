@@ -70,7 +70,8 @@ export default function fileHandle(inputFile: any){
                 // store.dispatch(actions.UploadStatusChange());
             }
             if((response.data.uploadedChunkData)&&(response.data.uploadedChunkData.length != 0)){
-                store.dispatch(actions.VEPFileReceive({data: response.data.uploadedChunkData, fileMd5: response.data.fileMd5}));
+                // store.dispatch(actions.VEPFileReceive({data: response.data.uploadedChunkData, fileMd5: response.data.fileMd5}));
+                store.dispatch(actions.VEPFileChangeFromPullChunkList({fileMd5: response.data.fileMd5, chunksResult: response.data.uploadedChunkData}))
             }
         }).catch( err => {
             console.error(err.message);
