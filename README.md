@@ -25,7 +25,7 @@
 
 #### 首页
 
-![首页](./public/img/homepage.png)
+![首页](./public/img/homePage.png)
 
 #### 注册 
 
