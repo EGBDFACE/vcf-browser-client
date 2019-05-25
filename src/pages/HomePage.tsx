@@ -39,6 +39,7 @@ interface States{
     fileObj: any,
     showFileListFlag: boolean,
     showMoreUserInfoFlag: boolean,
+    showVepFilterFlag: boolean,
     // vcfFilters: vcfRequirement[],
     vcfFilteredTableData: string[][],
     vcfTableHeaders: string[],
@@ -60,11 +61,12 @@ export default class Home extends React.Component<Props,States>{
             fileObj: undefined,
             showFileListFlag: false,
             showMoreUserInfoFlag: false,
+            showVepFilterFlag: false,
             fileList: [],
             // vcfFilters: [],
             vcfFilteredTableData: this.props.totalFileTable,
             vcfTableHeaders: ['Row Index','CHROM','POS','ID','REF','ALT','QUAL','FILTER','INFO'],
-            vepFilterHeaders: ['Chrom','Pos','EnsemblID','TranscriptID','ProteinID'],
+            vepFilterHeaders: ['CHROM','POS','ENSEMBLID','TRANSCRIPTID','PROTEINID'],
             vepFilterData: this.props.chunksResultDataTotal,
             selectedChunkIndex: undefined
         };
@@ -132,6 +134,14 @@ export default class Home extends React.Component<Props,States>{
                 // data: res.data.uploadedChunkData
                 chunksResult: res.data.uploadedChunkData
             });
+            // this.setState({
+            //     vepFilterData: res.data.uploadeddChunkData
+            // });
+            this.setState({
+                // selectedChunkIndex: 1
+                showVepFilterFlag: true
+            })
+            draw(res.data.uploadedChunkData);
         })
     }
     fileInputChange(value: any){
@@ -167,14 +177,16 @@ export default class Home extends React.Component<Props,States>{
     drawChunkDisplay(index: number){
         this.setState({
             vepFilterData: this.props.chunksResultData[index].data,
-            selectedChunkIndex: index
+            selectedChunkIndex: index,
+            showVepFilterFlag: false
         });
         draw(this.props.chunksResultData[index].data);
     }
     drawAllChunksDisplay(){
         this.setState({
             vepFilterData: this.props.chunksResultDataTotal,
-            selectedChunkIndex: this.props.chunksResultData.length
+            selectedChunkIndex: this.props.chunksResultData.length,
+            showVepFilterFlag: true
         })
         draw(this.props.chunksResultDataTotal);
     }
@@ -305,10 +317,10 @@ export default class Home extends React.Component<Props,States>{
     }
     renderChartDisplayFilter(){
         const vepFilterHeaders = this.state.vepFilterHeaders;
-        if(this.state.selectedChunkIndex === this.props.chunksResultData.length){
-            return (
+        if(this.state.showVepFilterFlag){
+            return(
                 <FilterBar filterHeaders={vepFilterHeaders}
-                        filtersChange={(value)=>this.vepFiltersChange(value)}
+                    filtersChange={(value)=>this.vepFiltersChange(value)}
                     />
             )
         }else{
@@ -415,30 +427,30 @@ function vcfFilter(data: string[][], filters: vcfRequirement[], headers: string[
 }
 
 function vepFilter(data: any[], filters: vcfRequirement[]): any[]{
-    let reqObj: any = {};
+    // let reqObj: any = {};
     let filteredData: any[] = [];
-    for(let i=0 ; i<filters.length; i++){
-        reqObj[filters[i].label] = filters[i].value;
-    }
+    // for(let i=0 ; i<filters.length; i++){
+    //     reqObj[filters[i].label] = filters[i].value;
+    // }
     for(let i=0 ; i< data.length; i++){
         let pairFlag: boolean = true;
         for(let j=0; j<filters.length; j++){
-            if(filters[j].label === 'Chrom'){
+            if(filters[j].label === 'CHROM'){
                 if(data[i].Location.chrom != filters[j].value){
                     pairFlag = false;
                     break;
                 }
-            }else if(filters[j].label === 'Pos'){
+            }else if(filters[j].label === 'POS'){
                 if((data[i].Location.start>=+filters[j].value)||(data[i].Location.end <= +filters[j].value)){
                     pairFlag = false;
                     break;
                 }
-            }else if(filters[j].label === 'EnsemblID'){
+            }else if(filters[j].label === 'ENSEMBLID'){
                 if(data[i].EnsemblID != filters[j].value){
                     pairFlag = false;
                     break;
                 }
-            }else if(filters[j].label === 'TranscriptID'){
+            }else if(filters[j].label === 'TRANSCRIPTID'){
                 if((data[i].transcriptConsequences)&&(data[i].transcriptConsequences.length != 0)&&(data[i].transcriptConsequences[0].Transcript)){
                     if(data[i].transcriptConsequences[0].Transcript.ID != filters[j].value){
                         pairFlag = false;
@@ -448,7 +460,7 @@ function vepFilter(data: any[], filters: vcfRequirement[]): any[]{
                     pairFlag = false;
                     break;
                 }
-            }else if(filters[j].label === 'ProteinID'){
+            }else if(filters[j].label === 'PROTEINID'){
                 if((data[i].transcriptConsequences)&&(data[i].transcriptConsequences.length != 0)&&(data[i].transcriptConsequences[0].Protein)){
                     if(data[i].transcriptConsequences[0].Protein.ID != filters[j].value){
                         pairFlag = false;
@@ -458,6 +470,8 @@ function vepFilter(data: any[], filters: vcfRequirement[]): any[]{
                     pairFlag = false;
                     break;
                 }
+            }else{
+                console.error('wrong filter label');
             }
         }
         if(pairFlag){

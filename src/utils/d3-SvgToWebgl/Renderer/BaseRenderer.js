@@ -15,13 +15,16 @@ export default class BaseRenderer {
     this.renderer.view.style.height = elem.height / this.renderer.resolution + 'px';
     //add suitable canvas width and height 
     //map to 800X800
-    if(elem.width / this.renderer.resolution > elem.height / this.renderer.resolution){
-      this.renderer.view.style.width = '800px';
-      this.renderer.view.style.height = (elem.height / this.renderer.resolution) / (elem.width / this.renderer.resolution) * 800 + 'px';
-    }else{
-      this.renderer.view.style.height = '800px';
-      this.renderer.view.style.width  = (elem.width / this.renderer.resolution) / (elem.height / this.renderer.resolution) * 800 + 'px';
-    }
+    // if(elem.width / this.renderer.resolution < elem.height / this.renderer.resolution){
+    // if(elem.width < elem.height){
+      // this.renderer.view.style.width = '800px';
+      // this.renderer.view.style.height = (elem.height / this.renderer.resolution) / (elem.width / this.renderer.resolution) * 800 + 'px';
+      // this.renderer.view.style.width = '800px';
+      // this.renderer.view.style.height = (elem.width / elem.height) * 800 + 'px';
+    // }else{
+      // this.renderer.view.style.height = '800px';
+      // this.renderer.view.style.width  = (elem.width / this.renderer.resolution) / (elem.height / this.renderer.resolution) * 800 + 'px';
+    // }
     
   }
 }

@@ -31,9 +31,11 @@ export default function draw(data: any){
     // gl.clearColor(0.0, 0.5, 0.0, 1.0);
     // gl.clear(gl.COLOR_BUFFER_BIT);
     
-    canvas.width = document.body.clientWidth;
-    canvas.height = document.body.clientHeight;
-    
+    // canvas.width = document.body.clientWidth;
+    // canvas.height = document.body.clientHeight;
+    canvas.width = 800;
+    canvas.height = 800;
+
     let vepData:I_VEPData = getData(data);
     // console.log(vepData);
     
